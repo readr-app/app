@@ -8,17 +8,6 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const posthtmlExpressions = require('posthtml-expressions');
 const manifest = require('./config/manifest');
 
-const SOURCES = [
-    'FAZ.de',
-    'NYTimes.com',
-    'Spiegel.de',
-    'Sueddeutsche.de',
-    'TheGuardian.com',
-    'taz.de',
-    'WashingtonPost.com',
-    'Zeit.de',
-];
-
 const SRC_PATH = path.join(__dirname, 'src');
 const DIST_PATH = path.join(__dirname, 'dist');
 
@@ -35,21 +24,9 @@ const cssLoader = {
     query: {
         modules: true,
         importLoaders: 1,
-        localIdentName
-    }
+        localIdentName,
+    },
 };
-
-const supportedSites = SOURCES
-    .sort((a, b) => {
-        const firstLetterA = a.slice(0, 1).toLowerCase();
-        const firstLetterB = b.slice(0, 1).toLowerCase();
-        if (firstLetterA === firstLetterB) {
-            return 0;
-        }
-        return firstLetterA < firstLetterB ? -1 : 1;
-    })
-    .map(name => `&nbsp;&bull;&nbsp;${name}`)
-    .join('<br>');
 
 const plugins = [
     new webpack.DefinePlugin({
@@ -57,12 +34,12 @@ const plugins = [
         __DEV__: !isProd,
         __PROD__: isProd,
         __COMMIT_SHA__: JSON.stringify(COMMIT_SHA),
-        MANIFEST_LOADER: JSON.stringify(MANIFEST_LOADER)
+        MANIFEST_LOADER: JSON.stringify(MANIFEST_LOADER),
     }),
     new HtmlWebpackPlugin({
         template: path.join(SRC_PATH, 'index.ejs'),
         minify: {
-            collapseWhitespace: isProd
+            collapseWhitespace: isProd,
         },
         manifestLoader: MANIFEST_LOADER,
         shouldIncludeTracking: isProd,
@@ -79,35 +56,24 @@ const plugins = [
         options: {
             sassLoader: {
                 indentedSyntax: true,
-                outputStyle: 'compressed'
-            }
-        }
+                outputStyle: 'compressed',
+            },
+        },
     }),
     new webpack.LoaderOptionsPlugin({
         test: /\.(png|jpe?g|gif)$/,
         options: {
             fileLoader: {
                 name: '[sha512:hash:base64:7].[ext]',
-            }
-        }
+            },
+        },
     }),
     new webpack.LoaderOptionsPlugin({
         test: /\.svg$/,
         options: {
-            'urlLoader': {
+            urlLoader: {
                 name: '[sha512:hash:base64:7].[ext]',
                 limit: 1024 * 10,
-            }
-        }
-    }),
-    new webpack.LoaderOptionsPlugin({
-        options: {
-            posthtml: {
-                plugins: [
-                    posthtmlExpressions({
-                        locals: { supportedSites },
-                    }),
-                ],
             },
         },
     }),
@@ -139,7 +105,7 @@ const plugins = [
 const prodPlugins = !isProd ? [] : [
     new webpack.LoaderOptionsPlugin({
         minimize: true,
-        debug: false
+        debug: false,
     }),
     new webpack.optimize.UglifyJsPlugin({
         compress: {
@@ -152,11 +118,11 @@ const prodPlugins = !isProd ? [] : [
             dead_code: true,
             evaluate: true,
             if_return: true,
-            join_vars: true
+            join_vars: true,
         },
         output: {
-            comments: false
-        }
+            comments: false,
+        },
     }),
     new FaviconsWebpackPlugin({
         logo: path.join(__dirname, 'assets', 'readr-app-icon.png'),
@@ -182,78 +148,99 @@ const prodPlugins = !isProd ? [] : [
         template: path.join(SRC_PATH, 'manifestloader.ejs'),
         filename: MANIFEST_LOADER,
         minify: {
-            collapseWhitespace: isProd
+            collapseWhitespace: isProd,
         },
         inject: false,
         appCacheFile: LEGACY_MANIFEST_FILE,
     }),
 ];
 
-module.exports = {
+module.exports = (supportedSources, bail) => {
 
-    target: 'web',
+    const supportedSites = supportedSources
+        .map(name => `&nbsp;&bull;&nbsp;${name}`)
+        .join('<br>');
+    const postHtmlOptions = new webpack.LoaderOptionsPlugin({
+        options: {
+            posthtml: {
+                plugins: [
+                    posthtmlExpressions({
+                        locals: { supportedSites },
+                    }),
+                ],
+            },
+        },
+    });
 
-    context: SRC_PATH,
+    return {
 
-    entry: path.resolve(SRC_PATH, 'index.js'),
+        target: 'web',
 
-    output: {
-        path: DIST_PATH,
-        publicPath: '/',
-        filename: 'static/[name].[hash].js',
-    },
+        context: SRC_PATH,
 
-    module: {
-        rules: [{
-            test: /\.js$/,
-            use: ['source-map-loader'],
-            exclude: /node_modules/
-        }, {
-            test: /\.jsx?$/,
-            use: ['babel-loader'],
-            exclude: [/node_modules/, /__tests__/]
-        }, {
-            test: /\.s(a|c)ss$/,
-            use: [
-                'style-loader',
-                cssLoader,
-                'postcss-loader',
-                'sass-loader'
-            ]
-        }, {
-            test: /\.(png|jpe?g|gif)$/,
-            use: ['file-loader']
-        }, {
-            test: /\.markup\.svg$/,
-            use: ['html-loader', 'markup-inline-loader']
-        }, {
-            test: /\.file\.svg$/,
-            use: ['url-loader']
-        }, {
-            test: /\.md$/,
-            use: [
-                { loader: 'html-loader', options: { minimize: isProd } },
-                'posthtml-loader',
-                'markdown-loader',
-            ]
-        }]
-    },
+        entry: path.resolve(SRC_PATH, 'index.js'),
 
-    resolve: {
-        extensions: ['.js', '.jsx'],
-    },
+        output: {
+            path: DIST_PATH,
+            publicPath: '/',
+            filename: 'static/[name].[hash].js',
+        },
 
-    devServer: {
-        contentBase: DIST_PATH,
-        inline: true,
-        clientLogLevel: 'error',
-        historyApiFallback: true,
-        port: 8090,
-        stats: { colors: true }
-    },
+        module: {
+            rules: [{
+                test: /\.js$/,
+                use: ['source-map-loader'],
+                exclude: /node_modules/,
+            }, {
+                test: /\.jsx?$/,
+                use: ['babel-loader'],
+                exclude: [/node_modules/, /__tests__/],
+            }, {
+                test: /\.s(a|c)ss$/,
+                use: [
+                    'style-loader',
+                    cssLoader,
+                    'postcss-loader',
+                    'sass-loader',
+                ],
+            }, {
+                test: /\.(png|jpe?g|gif)$/,
+                use: ['file-loader'],
+            }, {
+                test: /\.markup\.svg$/,
+                use: ['html-loader', 'markup-inline-loader'],
+            }, {
+                test: /\.file\.svg$/,
+                use: ['url-loader'],
+            }, {
+                test: /\.md$/,
+                use: [
+                    { loader: 'html-loader', options: { minimize: isProd } },
+                    'posthtml-loader',
+                    'markdown-loader',
+                ],
+            }],
+        },
 
-    devtool: 'source-map',
+        resolve: {
+            extensions: ['.js', '.jsx'],
+        },
 
-    plugins: plugins.concat(prodPlugins)
+        devServer: {
+            contentBase: DIST_PATH,
+            inline: true,
+            clientLogLevel: 'error',
+            historyApiFallback: true,
+            port: 8090,
+            stats: { colors: true },
+        },
+
+        devtool: 'source-map',
+
+        plugins: plugins.concat([postHtmlOptions]).concat(prodPlugins),
+
+        bail,
+
+    };
 
 };
