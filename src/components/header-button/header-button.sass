@@ -1,0 +1,90 @@
+
+@import "../../styles/functions";
+@import "../../styles/mixins";
+
+
+.button,
+.inner
+    width: rem(30)
+    height: rem(30)
+
+
+.button
+    position: relative
+    margin: 0 0 0 rem(10)
+    align-self: stretch
+
+
+.inner
+
+    &.inner
+        margin: 0
+
+    &:hover ~ .icon,
+    &:focus ~ .icon
+        opacity: .7
+
+
+.text
+    +visuallyhidden
+
+
+.hidden
+    visibility: hidden
+
+
+.icon
+    align-self: center
+    position: absolute
+    top: rem(14)
+    left: 10%
+    right: 10%
+    transition: opacity 200ms ease
+
+    &:before,
+    &:after
+        content: ""
+        background-color: white
+        display: block
+        transform-origin: left center
+        transition: transform 200ms ease
+
+
+.navIcon
+
+    &,
+    &:before,
+    &:after
+        height: 2px
+        background: white
+        border-radius: 1px
+
+
+    &:before,
+    &:after
+        position: absolute
+        width: 100%
+
+
+    &:before
+        top: -7px
+
+
+    &:after
+        bottom: -7px
+
+
+.backIcon
+
+    &,
+    &:before,
+    &:after
+        width: 70%
+        height: 2px
+        border-radius: 1px
+
+    &:before
+        transform: rotate(45deg) translateY(1px) scaleX(1.1)
+
+    &:after
+        transform: rotate(-45deg) translateY(-1px) scaleX(1.1)

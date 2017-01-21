@@ -1,0 +1,25 @@
+
+@import "../../styles/functions"
+
+
+.drawer
+    padding-top: rem(48)
+
+
+.close
+    position: absolute
+    top: rem(4)
+    right: rem(12)
+    padding: rem(12)
+    font-size: rem(36)
+    line-height: #{(24/36)}
+    color: unquote("rgb(#{$palette-grey-600})")
+    border: none
+    appearance: none
+    background: transparent
+    transition: color 200ms ease
+    cursor: pointer
+
+    &:hover,
+    &:focus
+        color: unquote("rgb(#{$palette-grey-400})")

@@ -1,0 +1,24 @@
+
+@import "../../styles/functions"
+@import "../../styles/mixins"
+
+
+.header
+    composes: mdl-layout__header from mdl("layout/_layout.scss")
+    display: flex !important
+    justify-content: center;
+    transition: background-color 200ms ease-in-out
+
+
+.inner
+    composes: mdl-layout__header-row from mdl("layout/_layout.scss")
+    +container(0)
+    height: auto
+    position: relative
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    align-items: center
+    align-content: space-between
+    flex-wrap: nowrap
+    align-self: stretch

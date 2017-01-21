@@ -1,0 +1,27 @@
+
+@import "../styles/functions"
+
+
+:global
+
+    html,
+    body
+        height: 100%
+        padding: 0
+        margin: 0
+
+
+    html
+        font: normal 100%/1.4 "Helvetica Neue", "Calibri Light", Roboto, sans-serif
+        -webkit-font-smoothing: antialiased
+        -moz-osx-font-smoothing: grayscale
+        color: #444
+        background-color: white
+
+
+    a
+        color: unquote("rgb(#{$palette-indigo-500})")
+
+        &:hover,
+        &:focus
+            text-decoration: underline

@@ -1,0 +1,54 @@
+
+@import "../../styles/functions"
+
+
+.item
+    padding: 0
+    position: relative
+    margin-bottom: rem(2)
+    background-color: rgba(black, .02)
+    flex-direction: column
+    align-items: flex-start
+    transform-origin: center top
+
+    &:nth-child(odd)
+        background-color: rgba(black, .06)
+
+
+.link
+    padding: rem(20) rem(42) rem(16) rem(16)
+    user-select: none
+    text-decoration: none
+    transition: background-color 200ms ease
+    line-height: 1.6
+
+    &:hover,
+    &:focus
+        text-decoration: underline
+
+
+.meta
+    padding: 0 rem(42) rem(12) rem(16)
+    font-size: rem(11)
+    color: unquote("rgba(#{$palette-grey-600}, .9)")
+
+
+.delete
+    position: absolute
+    top: 50%
+    right: 0
+    padding: rem(12)
+    appearance: none
+    border: none
+    background: none
+    font-size: rem(24)
+    line-height: 1
+    color: #999
+    transform: translateY(-50%)
+    z-index: 10
+    cursor: pointer
+
+    &:hover,
+    &:focus
+        outline: none
+        color: #333

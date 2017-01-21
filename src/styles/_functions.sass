@@ -1,0 +1,15 @@
+
+@import "~material-design-lite/src/color-definitions"
+
+@function mdl($path)
+    @return "sass-loader!../../../node_modules/material-design-lite/src/#{$path}"
+
+
+@function rem($value)
+    @return ($value/16) * 1rem
+
+
+@function strip-unit($val)
+    @if type-of($val) == "number" and not unitless($val)
+        @return $val / ($val * 0 + 1);
+    @return $val;

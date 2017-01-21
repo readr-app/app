@@ -1,0 +1,20 @@
+
+language: node_js
+
+cache:
+    directories:
+        - node_modules
+
+env:
+    global:
+        - NODE_ENV=production
+        - secure: MyKXx95R0YnG7WGqlBYboEWbTFy0TTSljoomnyDwtTHi04yA4i/YE+avq5i/KLlBsA8n0lEC5Qr6WofdFiUm63hkKN0bJpopmSVGc6Q5VhqqHfT0rn4uIWNVO7yyPf779wPgLeOH5P1GAL9yZOcliE8wCWoMiDdhxIH05d6rnl79hUobMZNRZXAWeVnckX9zlQ9ZzUJ8wJiDzYT/EYwkkwNzl4NfEah1ooCBhsg/obLyIwIw6+Yiq2wCef2kf25DLnojxwHoFe19sgs9KKzfG4IztLhGJGTMIa6uApbSYlQOU2+YlOTSEKxu+/r+U0vVMbYWvlbJReMVab/JHYt26KF71PhuCZOfDozmxzEMM4dq0ZM76JdcmUp6xOpLj1bO/EtVOH106kYotb7IwKF6FBA/ARSS7qCJaRj+0qYdP8HvJgYtVJ80BTaSmPCG6cv896t1CEraW1z+2wu59hmCkOHiSFK0nYgKuP1aC2ia7S4zykTTFKMud3fEiRTENs44cMCQqrXyBF16f+MBGucBvqVQ1iQRG1IqlSMKJ5IwYb6tnn8MP12fuUyThPGK4J9wqDfRS/GgVYTYyMSVKRrYQL+x5dQzwQzdLasU7vAzcElRRzxDB2p9JqoHVsk+J5kN/XaO1T0BD0KytgA9N/HETFphyyn9stXcXB8pgabVhic=
+        - secure: jaypkqNDp3HYUF3sxLkDI1Ba6ygr0FzXt/buO6csP1/fqlboZ0xT57X8tNp75BeShf6gRFIjU3cz7Nhe9vp3j7H3+lXGDvsUJHufS9F2Uir3X2m1Jw8J73gCsiziNFozVWn0PKwYWFf/FDeeraNrzwA7TTjdxbORA9PeSoA50rUaM+CgbjeVQQj7Olx3FSerHGxubbddLuUtvQ6zmzYyj7h6NZ8ZGppu/3jhh+TW/Ij2USLCi8yxHCScQMxbwIlFjfrW38YTDTdW+6/T/KXrOGPTLjGLynf1+ReAkRGNkDePXeLcC209CN95fmw27LZsqBUFcTjGCW0tlX5iAWbXKNhGnUIXUW7m3PWxnuRQSJTEn27rivF9HegaUePbYUQBX8xsc/gOw2rb4OEo3Q0Wjenr1LUOXT5m3uKSUlUYcPu/71su0dMiengEO7SlA/66XSqV/765DPMPkp+mg1KYMTZTofSku1fut79YxqqhymVwRwK+nLL6A3RPsKw/1ea7caIotNoUETwLM7hgYclxZQBTlS5mWy/5fE3iwyC9W1o38RTVG/PBqqQz/JTfOmMSz7gLIKSEvTNlz89wl5EFpf8wEpo+iy9QqicANJt2GxkG3CYjKK6eaIZYcO+8/smdj9mFCgIXpqiC61ZMhSg8yQjw6wR4YHp0phSJ5KdZZIU=
+
+deploy:
+    provider: script
+    script: cp CNAME dist && cp dist/index.html dist/200.html && npm run deploy
+    skip_cleanup: true
+    on:
+        branch:
+            - master
