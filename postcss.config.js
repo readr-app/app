@@ -7,5 +7,5 @@ const isProd = nodeEnv === 'production';
 const prodPlugins = isProd ? [cssnano] : [];
 
 module.exports = {
-    plugins: [autoprefixer].concat(prodPlugins)
+    plugins: [autoprefixer].concat(prodPlugins),
 };
