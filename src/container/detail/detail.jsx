@@ -2,8 +2,9 @@
 /* eslint "camelcase": 0 */
 
 import React, { PureComponent, PropTypes } from 'react';
+import uniq from 'ramda/src/uniq';
 import { trackEvent } from '../../modules/tracking/';
-import { get } from '../../modules/storage/';
+import { get, getKeys } from '../../modules/storage/';
 import ThemeColor from '../../components/theme-color/theme-color';
 import FallbackText from '../../components/fallback-text/fallback-text';
 import TimeAgo from '../../components/time-ago/time-ago';
@@ -15,12 +16,36 @@ class Detail extends PureComponent {
         super(props);
         this.state = {
             article: null,
+            keys: null,
         };
+        this.loadNext = this.loadNext.bind(this);
     }
 
     componentWillMount() {
-        get(this.props.params.id).then(article =>
-            this.setState({ article }));
+        Promise.all([
+            get(this.props.params.id),
+            getKeys(),
+        ]).then(([article, allKeys]) => {
+            const keys = this.removeCurrentArticleIdFromKeys(
+                uniq(allKeys), this.props.params.id);
+            this.setState({ article, keys });
+        });
+    }
+
+    removeCurrentArticleIdFromKeys(keys, articleId) {
+        const index = keys.indexOf(articleId);
+        return [
+            ...keys.slice(0, index),
+            ...keys.slice(index + 1),
+        ];
+    }
+
+    loadNext() {
+        const { router } = this.props;
+        const [ nextId, ...keys ] = this.state.keys;
+        router.replace(`/article/${nextId}`);
+        get(nextId).then(article =>
+            this.setState({ article, keys }));
     }
 
     render() {
@@ -47,6 +72,8 @@ class Detail extends PureComponent {
                     <em>{intro}</em>
                 </p>
                 <div dangerouslySetInnerHTML={{ __html: content }} />
+                {this.state.keys.length ?
+                    <button onClick={this.loadNext}>Load next</button> : null}
             </article>
         </ThemeColor>);
     }
