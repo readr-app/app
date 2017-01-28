@@ -7,7 +7,7 @@ import { trackEvent } from '../../modules/tracking/';
 import { get, getKeys } from '../../modules/storage/';
 import ThemeColor from '../../components/theme-color/theme-color';
 import FallbackText from '../../components/fallback-text/fallback-text';
-import TimeAgo from '../../components/time-ago/time-ago';
+import Article from '../../components/article/article';
 import styles from './detail.sass';
 
 class Detail extends PureComponent {
@@ -15,8 +15,9 @@ class Detail extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            article: null,
-            keys: null,
+            articles: [],
+            keys: [],
+            color: null,
         };
         this.loadNext = this.loadNext.bind(this);
     }
@@ -26,9 +27,11 @@ class Detail extends PureComponent {
             get(this.props.params.id),
             getKeys(),
         ]).then(([article, allKeys]) => {
+            const { color } = article;
+            const articles = [ article ];
             const keys = this.removeCurrentArticleIdFromKeys(
                 uniq(allKeys), this.props.params.id);
-            this.setState({ article, keys });
+            this.setState({ articles, color, keys });
         });
     }
 
@@ -44,37 +47,39 @@ class Detail extends PureComponent {
         const { router } = this.props;
         const [ nextId, ...keys ] = this.state.keys;
         router.replace(`/article/${nextId}`);
-        get(nextId).then(article =>
-            this.setState({ article, keys }));
+        get(nextId).then(article => {
+            const { url, title, created_at, color } = article;
+            const articles = [ ...this.state.articles, article ];
+            trackEvent('Load article inline', { url, title, created_at });
+            this.setState({ articles, color, keys });
+        });
     }
 
     render() {
         /* eslint "react/no-danger": 0 */
-        if (this.state.article === null) {
+        if (!this.state.articles.length) {
             return (<FallbackText
                 className={styles.loading}
                 text="Loading &hellip;"
             />);
         }
 
-        const { id } = this.props.params;
-        const { url, title, intro, content, color, created_at } = this.state.article;
-
-        trackEvent('View article', { id, url, title, created_at });
+        const { color } = this.state;
 
         return (<ThemeColor color={color}>
-            <article className={styles.article}>
-                <h1>{title}</h1>
-                <div className={styles.time}>
-                    Saved <TimeAgo timestamp={created_at} /> ago
-                </div>
-                <p>
-                    <em>{intro}</em>
-                </p>
-                <div dangerouslySetInnerHTML={{ __html: content }} />
+            <div>
+                {this.state.articles.map((article, i) => (
+                    <Article
+                        key={i}
+                        url={article.url}
+                        title={article.title}
+                        created_at={article.created_at}
+                        intro={article.intro}
+                        content={article.content}
+                    />))}
                 {this.state.keys.length ?
                     <button onClick={this.loadNext}>Load next</button> : null}
-            </article>
+            </div>
         </ThemeColor>);
     }
 
