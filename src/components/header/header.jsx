@@ -1,5 +1,6 @@
 
 import React, { PureComponent, PropTypes } from 'react';
+import classnames from 'classnames';
 import tinycolor from 'tinycolor2';
 import { get } from '../../modules/storage/';
 import HeaderButton from '../header-button/header-button';
@@ -53,12 +54,15 @@ class Header extends PureComponent {
     }
 
     render() {
-        const { isIndex } = this.props;
+        const { isIndex, isArticle } = this.props;
         const { color, drawerOpen } = this.state;
         const textColor = getTextColor(color);
+        const headerClassName = classnames(styles.header, {
+            [styles.fixed]: isArticle,
+        });
         return (<div>
             <header
-                className={styles.header}
+                className={headerClassName}
                 style={{ backgroundColor: color }}
             >
                 <div className={styles.inner}>
@@ -80,6 +84,7 @@ class Header extends PureComponent {
 
 Header.propTypes = {
     isIndex: PropTypes.bool.isRequired,
+    isArticle: PropTypes.bool.isRequired,
     articleId: PropTypes.string,
 };
 
