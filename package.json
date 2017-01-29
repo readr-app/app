@@ -9,6 +9,7 @@
     "build": "node compile",
     "test": "npm run lint && npm run build",
     "deploy": "surge --project ./dist",
+    "deploy:dev": "echo 'readr-dev.surge.sh' > ./dist/CNAME && npm run deploy",
     "watch": "node compile --watch",
     "clean": "rm -rf ./dist"
   },
