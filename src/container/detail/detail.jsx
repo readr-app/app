@@ -1,16 +1,27 @@
 
 /* eslint "camelcase": 0 */
 
-import React, { PureComponent, PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import uniq from 'ramda/src/uniq';
+import equals from 'ramda/src/equals';
+import mountNode from '../../';
 import { trackEvent } from '../../modules/tracking/';
 import { get, getKeys } from '../../modules/storage/';
+import scrollOffset from '../../modules/util/scroll-offset';
 import ThemeColor from '../../components/theme-color/theme-color';
 import FallbackText from '../../components/fallback-text/fallback-text';
 import Article from '../../components/article/article';
 import styles from './detail.sass';
 
-class Detail extends PureComponent {
+const removeCurrentArticleIdFromKeys = (keys, articleId) => {
+    const index = keys.indexOf(articleId);
+    return [
+        ...keys.slice(0, index),
+        ...keys.slice(index + 1),
+    ];
+};
+
+class Detail extends Component {
 
     constructor(props) {
         super(props);
@@ -19,39 +30,64 @@ class Detail extends PureComponent {
             keys: [],
             color: null,
         };
-        this.loadNext = this.loadNext.bind(this);
+        this.onScroll = this.onScroll.bind(this);
+        this.setActive = this.setActive.bind(this);
     }
 
     componentWillMount() {
+        const { id } = this.props.params;
         Promise.all([
-            get(this.props.params.id),
+            get(id),
             getKeys(),
         ]).then(([article, allKeys]) => {
             const { color } = article;
-            const articles = [ article ];
-            const keys = this.removeCurrentArticleIdFromKeys(
-                uniq(allKeys), this.props.params.id);
+            const articles = [{ ...article, ...{ id } }];
+            const keys = removeCurrentArticleIdFromKeys(uniq(allKeys), id);
             this.setState({ articles, color, keys });
         });
     }
 
-    removeCurrentArticleIdFromKeys(keys, articleId) {
-        const index = keys.indexOf(articleId);
-        return [
-            ...keys.slice(0, index),
-            ...keys.slice(index + 1),
-        ];
+    componentDidMount() {
+        window.addEventListener('scroll', this.onScroll);
+    }
+
+    shouldComponentUpdate(_, nextState) {
+        return !equals(this.state, nextState);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.onScroll);
+    }
+
+    onScroll() {
+        return requestAnimationFrame(() => {
+            const { height } = mountNode.getBoundingClientRect();
+            const position = window.innerHeight + scrollOffset.y + 20;
+            if (position > height) {
+                window.removeEventListener('scroll', this.onScroll);
+                this.loadNext();
+            }
+        });
+    }
+
+    setActive({ color, id, url, title, created_at }) {
+        this.props.router.replace(`/article/${id}`);
+        this.setState({ color });
+        trackEvent('View article', { url, title, created_at });
     }
 
     loadNext() {
-        const { router } = this.props;
-        const [ nextId, ...keys ] = this.state.keys;
-        router.replace(`/article/${nextId}`);
-        get(nextId).then(article => {
-            const { url, title, created_at, color } = article;
-            const articles = [ ...this.state.articles, article ];
-            trackEvent('Load article inline', { url, title, created_at });
-            this.setState({ articles, color, keys });
+        const [nextId, ...keys] = this.state.keys;
+        get(nextId).then((article) => {
+            const articles = [...this.state.articles, {
+                ...article,
+                ...{ id: nextId },
+            }];
+            this.setState({ articles, keys }, () => {
+                if (keys.length) {
+                    window.addEventListener('scroll', this.onScroll);
+                }
+            });
         });
     }
 
@@ -67,18 +103,20 @@ class Detail extends PureComponent {
         const { color } = this.state;
 
         return (<ThemeColor color={color}>
-            <div>
+            <div className={styles.outer}>
                 {this.state.articles.map((article, i) => (
                     <Article
+                        name={`article-${i}`}
                         key={i}
+                        id={article.id}
                         url={article.url}
+                        color={article.color}
                         title={article.title}
                         created_at={article.created_at}
                         intro={article.intro}
                         content={article.content}
+                        onSetActive={this.setActive}
                     />))}
-                {this.state.keys.length ?
-                    <button onClick={this.loadNext}>Load next</button> : null}
             </div>
         </ThemeColor>);
     }
@@ -88,6 +126,9 @@ class Detail extends PureComponent {
 Detail.propTypes = {
     params: PropTypes.shape({
         id: PropTypes.string.isRequired,
+    }).isRequired,
+    router: PropTypes.shape({
+        replace: PropTypes.func.isRequired,
     }).isRequired,
 };
 
