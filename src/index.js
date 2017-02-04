@@ -11,3 +11,5 @@ const App = createElement(Routes);
 render(App, mountNode);
 
 initCache();
+
+export default mountNode;

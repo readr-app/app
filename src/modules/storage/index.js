@@ -16,6 +16,9 @@ export const set = (key, payload) =>
 export const get = key =>
     instance.getItem(key);
 
+export const getKeys = () =>
+    instance.keys();
+
 export const getAll = () =>
     instance.keys().then(keys =>
         Promise.all(keys.map(key =>

@@ -1,0 +1,15 @@
+
+@import "../../styles/functions"
+@import "../../styles/mixins"
+
+
+.article
+    +container
+    +content
+    margin-bottom: rem(32)
+
+
+.time
+    color: unquote("rgb(#{$palette-grey-500})")
+    font-size: rem(14)
+    font-style: italic

@@ -7,11 +7,17 @@ import styles from './main.sass';
 
 const layoutClassname = classnames(mdlLayout['mdl-layout'], styles.main);
 
-const Main = ({ location, params, children }) =>
-    (<div className={layoutClassname}>
-        <Header isIndex={location.pathname === '/'} articleId={params.id} />
+const Main = ({ location, params, children }) => {
+    const { pathname } = location;
+    return (<div className={layoutClassname}>
+        <Header
+            isIndex={pathname === '/'}
+            isArticle={pathname.includes('/article/')}
+            articleId={params.id}
+        />
         {children}
     </div>);
+};
 
 Main.propTypes = {
     location: PropTypes.shape({

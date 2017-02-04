@@ -4,10 +4,20 @@
 
 =container($vertical-margin: rem(20))
     box-sizing: border-box
-    width: 100%
-    max-width: rem(720)
-    margin: $vertical-margin auto
-    padding: 0 rem(12)
+    margin: $vertical-margin rem(6)
+    padding: rem(8)
+
+    @media only screen and (min-width: rem(733))
+        width: rem(720)
+        padding: rem(16)
+        margin-left: auto
+        margin-right: auto
+
+
+=content
+    background-color: white
+    border: rem(1) solid #CCC
+    border-radius: rem(3)
 
 
 =visuallyhidden

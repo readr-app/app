@@ -1,7 +1,12 @@
 
 /* eslint "no-console": 0 */
 
+import equals from 'ramda/src/equals';
+
 const CATEGORY = 'ReadrEvnt';
+
+let lastPathname = null;
+let lastEventData = null;
 
 /* eslint "prefer-rest-params": 0 */
 const tracker = window.ga = window.ga || function tracker() {
@@ -15,6 +20,10 @@ tracker('set', 'anonymizeIp', true);
 tracker('send', 'pageview');
 
 const trackPageView = (pathname) => {
+    if (pathname === lastPathname) {
+        return;
+    }
+    lastPathname = pathname;
     if (__DEV__) {
         console.log('Track pageView', pathname);
         return;
@@ -24,6 +33,10 @@ const trackPageView = (pathname) => {
 };
 
 export const trackEvent = (action, data) => {
+    if (equals(data, lastEventData)) {
+        return;
+    }
+    lastEventData = data;
     if (__DEV__) {
         console.log('Track event', action, data);
         return;
