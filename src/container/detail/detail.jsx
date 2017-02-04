@@ -61,11 +61,16 @@ class Detail extends Component {
 
     onScroll() {
         return requestAnimationFrame(() => {
+            if (this.appendingNext) {
+                return;
+            }
+            this.appendingNext = true;
             const { height } = mountNode.getBoundingClientRect();
             const position = window.innerHeight + scrollOffset.y + 20;
             if (position > height) {
-                window.removeEventListener('scroll', this.onScroll);
                 this.loadNext();
+            } else {
+                this.appendingNext = false;
             }
         });
     }
@@ -85,7 +90,7 @@ class Detail extends Component {
             }];
             this.setState({ articles, keys }, () => {
                 if (keys.length) {
-                    window.addEventListener('scroll', this.onScroll);
+                    this.appendingNext = false;
                 }
             });
         });
