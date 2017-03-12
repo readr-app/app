@@ -128,3 +128,4 @@ crashlytics-build.properties
 
 ## Project
 dist
+.env
