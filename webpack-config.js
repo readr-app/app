@@ -87,6 +87,7 @@ const plugins = [
             /readr_apple.*\.png$/i,
             /readr_android-chrome.*\.png$/i,
             'readr_manifest.json',
+            /sw\.js$/,
         ],
         output: LEGACY_MANIFEST_FILE,
     }),
@@ -183,7 +184,7 @@ module.exports = (supportedSources, bail) => {
         output: {
             path: DIST_PATH,
             publicPath: '/',
-            filename: 'static/[name].[hash].js',
+            filename: '[name].[hash].js',
         },
 
         module: {
@@ -235,7 +236,7 @@ module.exports = (supportedSources, bail) => {
             stats: { colors: true },
         },
 
-        devtool: 'source-map',
+        devtool: !isProd && 'source-map',
 
         plugins: plugins.concat([postHtmlOptions]).concat(prodPlugins),
 
