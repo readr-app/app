@@ -6,14 +6,14 @@ const WebpackDevServer = require('webpack-dev-server');
 const request = require('request');
 const getConfig = require('./webpack-config');
 
-const URL = 'https://icica0077a.execute-api.eu-west-1.amazonaws.com/prod/supported-sources';
+const URL = 'https://us-central1-readr-60929.cloudfunctions.net/supportedSources';
 
 const getList = () => new Promise((resolve, reject) =>
-    request(URL, (err, { statusCode }, body) => {
+    request(URL, (err, { statusCode }, sources) => {
         if (err || statusCode !== 200) {
             return reject(err || 'That didn\'t work out so well ...');
         }
-        return resolve(JSON.parse(body).sources);
+        return resolve(JSON.parse(sources));
     }));
 
 const handleErrors = (err, stats) => {
