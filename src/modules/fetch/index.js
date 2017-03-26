@@ -1,11 +1,10 @@
 
-const API_ENDPOINT = __PROD__ ?
-    'https://icica0077a.execute-api.eu-west-1.amazonaws.com/prod/fetch-contents' :
-    'https://etwykxnypa.execute-api.eu-west-1.amazonaws.com/dev/fetch-contents';
+const API_ENDPOINT = 'https://us-central1-readr-60929.cloudfunctions.net/fetchContents';
 
 const fetchArticle = url => new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', API_ENDPOINT, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = () => {
         const response = JSON.parse(xhr.responseText);
         if (response.status !== 'OK') {
@@ -20,7 +19,7 @@ const fetchArticle = url => new Promise((resolve, reject) => {
         });
     };
     xhr.onerror = reject;
-    xhr.send(JSON.stringify({ url }));
+    xhr.send(`url=${encodeURIComponent(url)}`);
 });
 
 export default fetchArticle;
