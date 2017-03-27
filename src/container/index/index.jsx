@@ -94,7 +94,7 @@ class Index extends PureComponent {
                 color: article.color,
                 url: articleUrl,
                 created_at: Date.now(),
-            }).then(() => getAll().then(articles => {
+            }).then(() => getAll().then((articles) => {
                 this.props.setFetchingArticle(false);
                 this.props.setProgressTimeout(setTimeout(
                     this.hideProgress, SHOW_FEEDBACK_DURATION));
@@ -148,7 +148,7 @@ class Index extends PureComponent {
 
 Index.propTypes = {
     isLoading: PropTypes.bool.isRequired,
-    hideProgressTimeout:PropTypes.number,
+    hideProgressTimeout: PropTypes.number,
     success: PropTypes.bool.isRequired,
     loadingError: PropTypes.bool.isRequired,
     storingError: PropTypes.bool.isRequired,

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux'
+import { syncHistoryWithStore } from 'react-router-redux';
 import { Provider } from 'react-redux';
 import { onRouteChange } from '../modules/tracking/';
 import getStore from '../store/';
