@@ -4,6 +4,7 @@
 import React, { Component, PropTypes } from 'react';
 import uniq from 'ramda/src/uniq';
 import equals from 'ramda/src/equals';
+import connectDetail from '../../store/containers/detail';
 import mountNode from '../../';
 import { trackEvent } from '../../modules/tracking/';
 import { get, getKeys } from '../../modules/storage/';
@@ -35,7 +36,7 @@ class Detail extends Component {
     }
 
     componentWillMount() {
-        const { id } = this.props.params;
+        const { id } = this.props;
         Promise.all([
             get(id),
             getKeys(),
@@ -76,7 +77,7 @@ class Detail extends Component {
     }
 
     setActive({ color, id, url, title, created_at }) {
-        this.props.router.replace(`/article/${id}`);
+        this.props.replace(`/article/${id}`);
         this.setState({ color });
         trackEvent('View article', { url, title, created_at });
     }
@@ -129,12 +130,8 @@ class Detail extends Component {
 }
 
 Detail.propTypes = {
-    params: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-    }).isRequired,
-    router: PropTypes.shape({
-        replace: PropTypes.func.isRequired,
-    }).isRequired,
+    id: PropTypes.string.isRequired,
+    replace: PropTypes.func.isRequired,
 };
 
-export default Detail;
+export default connectDetail(Detail);

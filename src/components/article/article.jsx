@@ -57,7 +57,7 @@ const Article = ({ name, id, url, color, title, intro, content, created_at, onSe
         </footer>
     </article>);
 
-Article.propTypes = {
+export const ArticlePropTypes = Article.propTypes = {
     name: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,

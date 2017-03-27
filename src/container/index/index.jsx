@@ -1,7 +1,9 @@
 
 /* eslint "camelcase": 0 */
 
-import React, { PureComponent } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
+import omit from 'ramda/src/omit';
+import connectIndex from '../../store/containers/index';
 import { theme_color } from '../../../config/manifest';
 import { trackEvent } from '../../modules/tracking/';
 import fetchArticle from '../../modules/fetch/';
@@ -11,27 +13,22 @@ import Form from '../../components/form/form';
 import Progress from '../../components/progress/progress';
 import List from '../../components/list/list';
 import FallbackText from '../../components/fallback-text/fallback-text';
+import { ArticlePropTypes } from '../../components/article/article';
 import styles from './index.sass';
 
 const MIN_LOADING_DURATION = 1500;
 
 const SHOW_FEEDBACK_DURATION = 2000;
 
+const articleShape = omit(['name', 'onSetActive'], ArticlePropTypes);
+
 const minLoadingTime = () => new Promise(resolve =>
     setTimeout(() => resolve(), MIN_LOADING_DURATION));
 
-export default class Main extends PureComponent {
+class Index extends PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {
-            articles: [],
-            isLoading: false,
-            success: false,
-            loadingError: false,
-            storingError: false,
-            hideProgressTimeout: null,
-        };
         this.startDownload = this.startDownload.bind(this);
         this.saveArticle = this.saveArticle.bind(this);
         this.deleteArticle = this.deleteArticle.bind(this);
@@ -40,7 +37,7 @@ export default class Main extends PureComponent {
 
     componentWillMount() {
         getAll().then(articles =>
-            this.setState({ articles }));
+            this.props.setArticles(articles));
     }
 
     getProgressProperty() {
@@ -49,7 +46,7 @@ export default class Main extends PureComponent {
             success,
             loadingError,
             storingError,
-        } = this.state;
+        } = this.props;
 
         if (isLoading) {
             return { isLoading };
@@ -71,7 +68,7 @@ export default class Main extends PureComponent {
     }
 
     startDownload(articleUrl) {
-        this.setState({ isLoading: true });
+        this.props.setFetchingArticle(true);
         trackEvent('Start download', articleUrl);
         Promise.all([
             fetchArticle(articleUrl),
@@ -80,12 +77,10 @@ export default class Main extends PureComponent {
         .then(this.saveArticle(articleUrl))
         .catch(() => {
             trackEvent('Download failed', articleUrl);
-            this.setState({
-                isLoading: false,
-                loadingError: true,
-                hideProgressTimeout: setTimeout(this.hideProgress,
-                    SHOW_FEEDBACK_DURATION),
-            });
+            this.props.setFetchingArticle(false);
+            this.props.setProgressTimeout(setTimeout(
+                this.hideProgress, SHOW_FEEDBACK_DURATION));
+            this.props.setHasLoadingError(true);
         });
     }
 
@@ -99,22 +94,18 @@ export default class Main extends PureComponent {
                 color: article.color,
                 url: articleUrl,
                 created_at: Date.now(),
-            }).then(() => getAll().then(articles =>
-                this.setState({
-                    isLoading: false,
-                    success: true,
-                    hideProgressTimeout: setTimeout(
-                        this.hideProgress, SHOW_FEEDBACK_DURATION),
-                    articles,
-                })))
-            .catch(() => {
+            }).then(() => getAll().then(articles => {
+                this.props.setFetchingArticle(false);
+                this.props.setProgressTimeout(setTimeout(
+                    this.hideProgress, SHOW_FEEDBACK_DURATION));
+                this.props.setSuccess(true);
+                this.props.setArticles(articles);
+            })).catch(() => {
                 trackEvent('Storing failed', articleUrl);
-                this.setState({
-                    isLoading: false,
-                    storingError: true,
-                    hideProgressTimeout: setTimeout(
-                        this.hideProgress, SHOW_FEEDBACK_DURATION),
-                });
+                this.props.setFetchingArticle(false);
+                this.props.setProgressTimeout(setTimeout(
+                    this.hideProgress, SHOW_FEEDBACK_DURATION));
+                this.props.setHasStoringError(true);
             });
         };
     }
@@ -122,19 +113,17 @@ export default class Main extends PureComponent {
     deleteArticle(articleId) {
         return () => remove(articleId).then(() =>
             getAll().then(articles =>
-                this.setState({ articles })));
+                this.props.setArticles(articles)));
     }
 
     hideProgress() {
-        const { hideProgressTimeout } = this.state;
+        const { hideProgressTimeout } = this.props;
         clearTimeout(hideProgressTimeout);
-        this.setState({
-            isLoading: false,
-            success: false,
-            loadingError: false,
-            storingError: false,
-            hideProgressTimeout: null,
-        });
+        this.props.setFetchingArticle(false);
+        this.props.clearProgressTimeout();
+        this.props.setSuccess(false);
+        this.props.setHasLoadingError(false);
+        this.props.setHasStoringError(false);
     }
 
     render() {
@@ -145,9 +134,9 @@ export default class Main extends PureComponent {
                 {progressProperty ?
                     (<Progress {...progressProperty} />) :
                     (<Form startDownload={this.startDownload} />)}
-                {this.state.articles.length ?
+                {this.props.articles.length ?
                     (<List
-                        articles={this.state.articles}
+                        articles={this.props.articles}
                         deleteArticle={this.deleteArticle}
                     />) :
                     (<FallbackText text="Not articles saved yet." />)}
@@ -156,3 +145,21 @@ export default class Main extends PureComponent {
     }
 
 }
+
+Index.propTypes = {
+    isLoading: PropTypes.bool.isRequired,
+    hideProgressTimeout:PropTypes.number,
+    success: PropTypes.bool.isRequired,
+    loadingError: PropTypes.bool.isRequired,
+    storingError: PropTypes.bool.isRequired,
+    articles: PropTypes.arrayOf(PropTypes.shape(articleShape)).isRequired,
+    setFetchingArticle: PropTypes.func.isRequired,
+    setProgressTimeout: PropTypes.func.isRequired,
+    clearProgressTimeout: PropTypes.func.isRequired,
+    setSuccess: PropTypes.func.isRequired,
+    setHasLoadingError: PropTypes.func.isRequired,
+    setHasStoringError: PropTypes.func.isRequired,
+    setArticles: PropTypes.func.isRequired,
+};
+
+export default connectIndex(Index);
