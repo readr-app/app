@@ -5,10 +5,10 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import { Provider } from 'react-redux';
 import { onRouteChange } from '../modules/tracking/';
 import getStore from '../store/';
-import Main from '../container/main/main';
-import Index from '../container/index/index';
-import Detail from '../container/detail/detail';
-import About from '../container/about/about';
+import Main from '../views/main/main';
+import Index from '../views/index/index';
+import Detail from '../views/detail/detail';
+import About from '../views/about/about';
 import './routes.sass';
 
 const store = getStore();
