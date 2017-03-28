@@ -64,14 +64,7 @@ export const reducer = (state = initialState, action) => {
     }
 };
 
-const mapStateToProps = ({ index }) => ({
-    isLoading: index.isLoading,
-    hideProgressTimeout: index.hideProgressTimeout,
-    success: index.success,
-    loadingError: index.loadingError,
-    storingError: index.storingError,
-    articles: index.articles,
-});
+const mapStateToProps = ({ index }) => ({ ...index });
 
 const mapDispatchToProps = dispatch => ({
     setFetchingArticle: bool => dispatch(setFetchingArticle(bool)),

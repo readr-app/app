@@ -46,3 +46,24 @@ export const setArticles = payload => ({
     type: SET_ARTICLES,
     payload,
 });
+
+export const SET_KEYS = 'SET_KEYS';
+
+export const setKeys = payload => ({
+    type: SET_KEYS,
+    payload,
+});
+
+export const SET_ARTICLE_COLOR = 'SET_ARTICLE_COLOR';
+
+export const setArticleColor = payload => ({
+    type: SET_ARTICLE_COLOR,
+    payload,
+});
+
+export const SET_IS_APPENDING_ARTICLE = 'SET_IS_APPENDING_ARTICLE';
+
+export const setIsAppendingArticle = payload => ({
+    type: SET_IS_APPENDING_ARTICLE,
+    payload,
+});

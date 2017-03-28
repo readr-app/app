@@ -2,7 +2,6 @@
 /* eslint "camelcase": 0 */
 
 import React, { PureComponent, PropTypes } from 'react';
-import omit from 'ramda/src/omit';
 import connectIndex from '../../store/containers/index';
 import { theme_color } from '../../../config/manifest';
 import { trackEvent } from '../../modules/tracking/';
@@ -13,14 +12,12 @@ import Form from '../../components/form/form';
 import Progress from '../../components/progress/progress';
 import List from '../../components/list/list';
 import FallbackText from '../../components/fallback-text/fallback-text';
-import { ArticlePropTypes } from '../../components/article/article';
+import { articleShape } from '../../components/article/article';
 import styles from './index.sass';
 
 const MIN_LOADING_DURATION = 1500;
 
 const SHOW_FEEDBACK_DURATION = 2000;
-
-const articleShape = omit(['name', 'onSetActive'], ArticlePropTypes);
 
 const minLoadingTime = () => new Promise(resolve =>
     setTimeout(() => resolve(), MIN_LOADING_DURATION));

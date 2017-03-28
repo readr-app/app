@@ -8,6 +8,7 @@
 import React, { PropTypes } from 'react';
 import { Link, Helpers } from 'react-scroll';
 import classnames from 'classnames';
+import omit from 'ramda/src/omit';
 import mdlBtn from 'material-design-lite/src/button/_button.scss';
 import TimeAgo from '../time-ago/time-ago';
 import CopyButton, { hasClipboardSupport } from '../copy-button/copy-button';
@@ -57,7 +58,7 @@ const Article = ({ name, id, url, color, title, intro, content, created_at, onSe
         </footer>
     </article>);
 
-export const ArticlePropTypes = Article.propTypes = {
+Article.propTypes = {
     name: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
@@ -68,5 +69,7 @@ export const ArticlePropTypes = Article.propTypes = {
     created_at: PropTypes.number.isRequired,
     onSetActive: PropTypes.func.isRequired,
 };
+
+export const articleShape = omit(['name', 'onSetActive'], Article.propTypes);
 
 export default Helpers.Element(Article);
