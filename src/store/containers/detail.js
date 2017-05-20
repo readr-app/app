@@ -1,14 +1,15 @@
 
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import merge from 'ramda/src/merge';
 import {
     SET_KEYS,
-    SET_ARTICLES,
+    SET_DETAIL_ARTICLES,
     SET_ARTICLE_COLOR,
     SET_IS_APPENDING_ARTICLE,
 
-    setKeys,
-    setArticles,
+    getInitialDetail,
+    appendArticle,
     setArticleColor,
     setIsAppendingArticle,
 } from '../actions';
@@ -31,7 +32,7 @@ export const reducer = (state = initialState, action) => {
         return assign({
             keys: action.payload,
         });
-    case SET_ARTICLES:
+    case SET_DETAIL_ARTICLES:
         return assign({
             articles: action.payload,
         });
@@ -50,12 +51,12 @@ const mapStateToProps = ({ detail }, { params, router }) => ({
     replace: router.replace,
 });
 
-const mapDispatchToProps = dispatch => ({
-    setKeys: keys => dispatch(setKeys(keys)),
-    setArticles: articles => dispatch(setArticles(articles)),
-    setArticleColor: color => dispatch(setArticleColor(color)),
-    setIsAppendingArticle: bool => dispatch(setIsAppendingArticle(bool)),
-});
+const mapDispatchToProps = dispatch => bindActionCreators({
+    getInitialDetail,
+    appendArticle,
+    setArticleColor,
+    setIsAppendingArticle,
+}, dispatch);
 
 export default function connectDetail(view) {
     return connect(mapStateToProps, mapDispatchToProps)(view);
