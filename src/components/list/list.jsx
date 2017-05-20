@@ -23,8 +23,8 @@ class List extends PureComponent {
         this.willLeave = this.willLeave.bind(this);
     }
 
-    componentWillReceiveProps() {
-        this.shouldAnimate = true;
+    componentWillReceiveProps(nextProps) {
+        this.shouldAnimate = this.props.articles.length !== nextProps.articles.length;
     }
 
     getXValue(value) {

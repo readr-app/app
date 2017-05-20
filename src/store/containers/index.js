@@ -1,80 +1,73 @@
 
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import merge from 'ramda/src/merge';
 import {
-    SET_FETCHING_ARTICLE,
-    SET_PROGRESS_TIMEOUT,
-    CLEAR_PROGRESS_TIMEOUT,
-    SET_SUCCESS,
-    SET_HAS_LOADING_ERROR,
-    SET_HAS_STORING_ERROR,
+    DOWNLOAD_ARTICLE,
+    DOWNLOAD_SUCCESS,
+    SHOW_SUCCESS,
+    HIDE_SUCCESS,
+    SHOW_ERROR,
+    HIDE_ERROR,
     SET_ARTICLES,
 
-    setFetchingArticle,
-    setProgressTimeout,
-    clearProgressTimeout,
-    setSuccess,
-    setHasLoadingError,
-    setHasStoringError,
-    setArticles,
+    fetchArticles,
+    downloadArticle,
+    deleteArticle,
 } from '../actions';
 
 const initialState = {
     isLoading: false,
-    hideProgressTimeout: null,
     success: false,
-    loadingError: false,
-    storingError: false,
+    error: false,
     articles: [],
 };
 
 export const reducer = (state = initialState, action) => {
     const assign = merge(state);
     switch (action.type) {
-    case SET_FETCHING_ARTICLE:
+    case DOWNLOAD_ARTICLE:
         return assign({
-            isLoading: action.payload,
+            isLoading: true,
         });
-    case SET_PROGRESS_TIMEOUT:
+    case DOWNLOAD_SUCCESS:
         return assign({
-            hideProgressTimeout: action.payload,
+            success: true,
+            isLoading: false,
         });
-    case CLEAR_PROGRESS_TIMEOUT:
+    case SHOW_SUCCESS:
         return assign({
-            hideProgressTimeout: null,
+            success: true,
         });
-    case SET_SUCCESS:
+    case HIDE_SUCCESS:
         return assign({
-            success: action.payload,
+            success: false,
         });
-    case SET_HAS_LOADING_ERROR:
+    case SHOW_ERROR:
         return assign({
-            loadingError: action.payload,
+            isLoading: false,
+            error: action.payload,
         });
-    case SET_HAS_STORING_ERROR:
+    case HIDE_ERROR:
         return assign({
-            storingError: action.payload,
+            error: false,
         });
     case SET_ARTICLES:
         return assign({
             articles: action.payload,
         });
     default:
-        return assign({});
+        return state;
     }
 };
 
 const mapStateToProps = ({ index }) => ({ ...index });
 
-const mapDispatchToProps = dispatch => ({
-    setFetchingArticle: bool => dispatch(setFetchingArticle(bool)),
-    setProgressTimeout: num => dispatch(setProgressTimeout(num)),
-    clearProgressTimeout: () => dispatch(clearProgressTimeout()),
-    setSuccess: bool => dispatch(setSuccess(bool)),
-    setHasLoadingError: bool => dispatch(setHasLoadingError(bool)),
-    setHasStoringError: bool => dispatch(setHasStoringError(bool)),
-    setArticles: articles => dispatch(setArticles(articles)),
-});
+const mapDispatchToProps = dispatch => bindActionCreators({
+    fetchArticles,
+    downloadArticle,
+    deleteArticle,
+}, dispatch);
 
 export default function connectIndex(view) {
     return connect(mapStateToProps, mapDispatchToProps)(view);

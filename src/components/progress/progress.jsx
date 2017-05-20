@@ -2,7 +2,19 @@
 import React, { PropTypes } from 'react';
 import classnames from 'classnames';
 import mdlprogress from 'material-design-lite/src/progress/_progress.scss';
+import { ERROR_DOWNLOAD, ERROR_STORING } from '../../store/actions';
 import styles from './progress.sass';
+
+
+const getErrorText = (errorType) => {
+    if (errorType === ERROR_DOWNLOAD) {
+        return 'Could not load the article.';
+    }
+    if (errorType === ERROR_STORING) {
+        return 'Could not store the article in the database.';
+    }
+    return null;
+};
 
 const getProgressBar = () => {
     const outer = classnames(styles.bar, mdlprogress['mdl-progress'],
@@ -26,15 +38,9 @@ const Progress = (props) => {
     const {
         isLoading,
         success,
-        loadingError,
-        storingError,
+        error,
     } = props;
-    /* eslint "no-nested-ternary": 0 */
-    const errorTxt = loadingError ?
-        'Could not load the article.' :
-        storingError ?
-        'Could not store the article in the database.' :
-        null;
+    const errorTxt = getErrorText(error);
 
     if (isLoading) {
         return (<div className={styles.progress}>
@@ -63,8 +69,7 @@ const Progress = (props) => {
 Progress.propTypes = {
     isLoading: PropTypes.bool,
     success: PropTypes.bool,
-    loadingError: PropTypes.bool,
-    storingError: PropTypes.bool,
+    error: PropTypes.bool,
 };
 
 export default Progress;

@@ -5,8 +5,6 @@ import React, { PureComponent, PropTypes } from 'react';
 import connectIndex from '../../store/containers/index';
 import { theme_color } from '../../../config/manifest';
 import { trackEvent } from '../../modules/tracking/';
-import fetchArticle from '../../modules/fetch/';
-import { set, getAll, remove } from '../../modules/storage/';
 import ThemeColor from '../../components/theme-color/theme-color';
 import Form from '../../components/form/form';
 import Progress from '../../components/progress/progress';
@@ -15,34 +13,22 @@ import FallbackText from '../../components/fallback-text/fallback-text';
 import { articleShape } from '../../components/article/article';
 import styles from './index.sass';
 
-const MIN_LOADING_DURATION = 1500;
-
-const SHOW_FEEDBACK_DURATION = 2000;
-
-const minLoadingTime = () => new Promise(resolve =>
-    setTimeout(() => resolve(), MIN_LOADING_DURATION));
-
 class Index extends PureComponent {
 
     constructor(props) {
         super(props);
         this.startDownload = this.startDownload.bind(this);
-        this.saveArticle = this.saveArticle.bind(this);
-        this.deleteArticle = this.deleteArticle.bind(this);
-        this.hideProgress = this.hideProgress.bind(this);
     }
 
     componentWillMount() {
-        getAll().then(articles =>
-            this.props.setArticles(articles));
+        this.props.fetchArticles();
     }
 
     getProgressProperty() {
         const {
             isLoading,
             success,
-            loadingError,
-            storingError,
+            error,
         } = this.props;
 
         if (isLoading) {
@@ -53,74 +39,16 @@ class Index extends PureComponent {
             return { success };
         }
 
-        if (loadingError) {
-            return { loadingError };
-        }
-
-        if (storingError) {
-            return { storingError };
+        if (error) {
+            return { error };
         }
 
         return null;
     }
 
     startDownload(articleUrl) {
-        this.props.setFetchingArticle(true);
         trackEvent('Start download', articleUrl);
-        Promise.all([
-            fetchArticle(articleUrl),
-            minLoadingTime(),
-        ])
-        .then(this.saveArticle(articleUrl))
-        .catch(() => {
-            trackEvent('Download failed', articleUrl);
-            this.props.setFetchingArticle(false);
-            this.props.setProgressTimeout(setTimeout(
-                this.hideProgress, SHOW_FEEDBACK_DURATION));
-            this.props.setHasLoadingError(true);
-        });
-    }
-
-    saveArticle(articleUrl) {
-        return ([article]) => {
-            trackEvent('Download succeeded', articleUrl);
-            return set(article.id, {
-                title: article.title,
-                intro: article.intro,
-                content: article.content,
-                color: article.color,
-                url: articleUrl,
-                created_at: Date.now(),
-            }).then(() => getAll().then((articles) => {
-                this.props.setFetchingArticle(false);
-                this.props.setProgressTimeout(setTimeout(
-                    this.hideProgress, SHOW_FEEDBACK_DURATION));
-                this.props.setSuccess(true);
-                this.props.setArticles(articles);
-            })).catch(() => {
-                trackEvent('Storing failed', articleUrl);
-                this.props.setFetchingArticle(false);
-                this.props.setProgressTimeout(setTimeout(
-                    this.hideProgress, SHOW_FEEDBACK_DURATION));
-                this.props.setHasStoringError(true);
-            });
-        };
-    }
-
-    deleteArticle(articleId) {
-        return () => remove(articleId).then(() =>
-            getAll().then(articles =>
-                this.props.setArticles(articles)));
-    }
-
-    hideProgress() {
-        const { hideProgressTimeout } = this.props;
-        clearTimeout(hideProgressTimeout);
-        this.props.setFetchingArticle(false);
-        this.props.clearProgressTimeout();
-        this.props.setSuccess(false);
-        this.props.setHasLoadingError(false);
-        this.props.setHasStoringError(false);
+        this.props.downloadArticle(articleUrl);
     }
 
     render() {
@@ -134,7 +62,7 @@ class Index extends PureComponent {
                 {this.props.articles.length ?
                     (<List
                         articles={this.props.articles}
-                        deleteArticle={this.deleteArticle}
+                        deleteArticle={articleId => this.props.deleteArticle(articleId)}
                     />) :
                     (<FallbackText text="Not articles saved yet." />)}
             </main>
@@ -145,18 +73,15 @@ class Index extends PureComponent {
 
 Index.propTypes = {
     isLoading: PropTypes.bool.isRequired,
-    hideProgressTimeout: PropTypes.number,
     success: PropTypes.bool.isRequired,
-    loadingError: PropTypes.bool.isRequired,
-    storingError: PropTypes.bool.isRequired,
+    error: PropTypes.oneOfType([
+        PropTypes.bool,
+        PropTypes.string,
+    ]).isRequired,
     articles: PropTypes.arrayOf(PropTypes.shape(articleShape)).isRequired,
-    setFetchingArticle: PropTypes.func.isRequired,
-    setProgressTimeout: PropTypes.func.isRequired,
-    clearProgressTimeout: PropTypes.func.isRequired,
-    setSuccess: PropTypes.func.isRequired,
-    setHasLoadingError: PropTypes.func.isRequired,
-    setHasStoringError: PropTypes.func.isRequired,
-    setArticles: PropTypes.func.isRequired,
+    fetchArticles: PropTypes.func.isRequired,
+    downloadArticle: PropTypes.func.isRequired,
+    deleteArticle: PropTypes.func.isRequired,
 };
 
 export default connectIndex(Index);

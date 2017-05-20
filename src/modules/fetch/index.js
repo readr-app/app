@@ -1,4 +1,6 @@
 
+import omit from 'ramda/src/omit';
+
 const API_ENDPOINT = __DEV__
     ? '/api/fetchContents'
     : 'https://us-central1-readr-60929.cloudfunctions.net/fetchContents';
@@ -14,11 +16,9 @@ const fetchArticle = url => new Promise((resolve, reject) => {
                 return reject(response.message);
             }
             return resolve({
-                id: response.id,
-                title: response.title,
-                intro: response.intro,
-                content: response.content,
-                color: response.color,
+                ...omit(['status'], response),
+                created_at: Date.now(),
+                url,
             });
         } catch (err) {
             return reject(err.message);

@@ -1,49 +1,70 @@
 
-export const SET_FETCHING_ARTICLE = 'SET_FETCHING_ARTICLE';
+export const FETCH_ARTICLES = 'FETCH_ARTICLES';
 
-export const setFetchingArticle = payload => ({
-    type: SET_FETCHING_ARTICLE,
+export const fetchArticles = () => ({
+    type: FETCH_ARTICLES,
+});
+
+export const DOWNLOAD_ARTICLE = 'DOWNLOAD_ARTICLE';
+
+export const downloadArticle = payload => ({
+    type: DOWNLOAD_ARTICLE,
     payload,
 });
 
-export const SET_PROGRESS_TIMEOUT = 'SET_PROGRESS_TIMEOUT';
+export const DOWNLOAD_SUCCESS = 'DOWNLOAD_SUCCESS';
 
-export const setProgressTimeout = payload => ({
-    type: SET_PROGRESS_TIMEOUT,
+export const downloadSuccess = payload => ({
+    type: DOWNLOAD_SUCCESS,
     payload,
 });
 
-export const CLEAR_PROGRESS_TIMEOUT = 'CLEAR_PROGRESS_TIMEOUT';
+export const SHOW_SUCCESS = 'SHOW_SUCCESS';
 
-export const clearProgressTimeout = () => ({
-    type: CLEAR_PROGRESS_TIMEOUT,
+export const showSuccess = () => ({
+    type: SHOW_SUCCESS,
 });
 
-export const SET_SUCCESS = 'SET_SUCCESS';
+export const HIDE_SUCCESS = 'HIDE_SUCCESS';
 
-export const setSuccess = payload => ({
-    type: SET_SUCCESS,
+export const hideSuccess = () => ({
+    type: HIDE_SUCCESS,
+});
+
+export const SHOW_ERROR = 'SHOW_ERROR';
+
+export const ERROR_DOWNLOAD = 'ERROR_DOWNLOAD';
+export const ERROR_STORING = 'ERROR_STORING';
+
+export const showError = payload => ({
+    type: SHOW_ERROR,
     payload,
 });
 
-export const SET_HAS_LOADING_ERROR = 'SET_HAS_LOADING_ERROR';
+export const HIDE_ERROR = 'HIDE_ERROR';
 
-export const setHasLoadingError = payload => ({
-    type: SET_HAS_LOADING_ERROR,
-    payload,
-});
-
-export const SET_HAS_STORING_ERROR = 'SET_HAS_STORING_ERROR';
-
-export const setHasStoringError = payload => ({
-    type: SET_HAS_STORING_ERROR,
-    payload,
+export const hideError = () => ({
+    type: HIDE_ERROR,
 });
 
 export const SET_ARTICLES = 'SET_ARTICLES';
 
 export const setArticles = payload => ({
     type: SET_ARTICLES,
+    payload,
+});
+
+export const DELETE_ARTICLE = 'DELETE_ARTICLE';
+
+export const deleteArticle = payload => ({
+    type: DELETE_ARTICLE,
+    payload,
+});
+
+export const GET_INITIAL_DETAIL = 'GET_INITIAL_DETAIL';
+
+export const getInitialDetail = payload => ({
+    type: GET_INITIAL_DETAIL,
     payload,
 });
 
