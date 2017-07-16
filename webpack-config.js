@@ -31,8 +31,8 @@ const cssLoader = {
 const plugins = [
     new webpack.DefinePlugin({
         'process.env': { NODE_ENV: JSON.stringify(nodeEnv) },
-        __DEV__: !isProd,
-        __PROD__: isProd,
+        __DEV__: JSON.stringify(!isProd),
+        __PROD__: JSON.stringify(isProd),
         __COMMIT_SHA__: JSON.stringify(COMMIT_SHA),
         MANIFEST_LOADER: JSON.stringify(MANIFEST_LOADER),
     }),
