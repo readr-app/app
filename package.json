@@ -7,12 +7,11 @@
     "lint:jsx": "eslint --ext='.jsx' ./",
     "lint": "npm run lint:js && npm run lint:jsx",
     "build": "node compile",
-    "test": "npm run lint && npm run build",
+    "test": "script/test",
     "deploy": "firebase deploy --token \"$FIREBASE_TOKEN\"",
     "watch": "node compile --watch",
     "clean": "rm -rf ./dist",
-    "serve": "serve ./dist",
-    "e2e": "find tests -name '*.js' -exec $(npm bin)/testcafe chrome,firefox {} \\;"
+    "serve": "serve ./dist"
   },
   "author": "Emanuel Kluge",
   "license": "Beerware",
