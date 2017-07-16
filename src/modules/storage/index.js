@@ -13,8 +13,12 @@ const instance = createInstance({
 export const set = (key, payload) =>
     instance.setItem(key, payload);
 
+// Add ID for the sake of backwards compatibility
 export const get = key =>
-    instance.getItem(key);
+    instance.getItem(key).then(item => ({
+        ...item,
+        ...{ id: key },
+    }));
 
 export const getKeys = () =>
     instance.keys();
