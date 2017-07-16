@@ -12,7 +12,7 @@
     "watch": "node compile --watch",
     "clean": "rm -rf ./dist",
     "serve": "serve ./dist",
-    "e2e": "find tests -name '*.js' -exec $(npm bin)/testcafe chrome {} \\;"
+    "e2e": "find tests -name '*.js' -exec $(npm bin)/testcafe chrome,firefox {} \\;"
   },
   "author": "Emanuel Kluge",
   "license": "Beerware",
