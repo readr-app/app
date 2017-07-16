@@ -7,7 +7,9 @@
     "globals": {
         "__PROD__": false,
         "__DEV__": false,
-        "MANIFEST_LOADER": false
+        "MANIFEST_LOADER": false,
+        "fixture": false,
+        "test": false
     },
     "rules": {
         "comma-dangle": 2,

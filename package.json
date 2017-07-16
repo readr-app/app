@@ -10,7 +10,9 @@
     "test": "npm run lint && npm run build",
     "deploy": "firebase deploy --token \"$FIREBASE_TOKEN\"",
     "watch": "node compile --watch",
-    "clean": "rm -rf ./dist"
+    "clean": "rm -rf ./dist",
+    "serve": "serve ./dist",
+    "e2e": "find tests -name '*.js' -exec $(npm bin)/testcafe chrome {} \\;"
   },
   "author": "Emanuel Kluge",
   "license": "Beerware",
@@ -64,9 +66,11 @@
     "require-all": "^2.1.0",
     "rxjs": "^5.2.0",
     "sass-loader": "^4.0.2",
+    "serve": "^6.0.2",
     "serviceworker-webpack-plugin": "^0.1.7",
     "source-map-loader": "^0.1.5",
     "style-loader": "^0.13.1",
+    "testcafe": "^0.16.2",
     "tinycolor2": "^1.4.1",
     "url-loader": "^0.5.7",
     "webpack": "^2.2.0",

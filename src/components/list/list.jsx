@@ -61,7 +61,7 @@ class List extends PureComponent {
             styles={sort(articles).map(this.toStyles({ x: this.getXValue(1) }))}
         >
             {interpolatedStyles => (
-                <ul className={mdlList['mdl-list']}>
+                <ul className={mdlList['mdl-list']} id="article-list">
                     {interpolatedStyles.map(({ key, data, style }) => (
                         <ListItem
                             key={key}
