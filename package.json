@@ -5,7 +5,7 @@
   "scripts": {
     "lint:js": "eslint .",
     "lint:jsx": "eslint --ext='.jsx' ./",
-    "lint": "npm run lint:js; npm run lint:jsx",
+    "lint": "npm run lint:js && npm run lint:jsx",
     "build": "node compile",
     "test": "npm run lint && npm run build",
     "deploy": "firebase deploy --token \"$FIREBASE_TOKEN\"",
