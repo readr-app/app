@@ -48,7 +48,7 @@ export const reducer = (state = initialState, action) => {
 const mapStateToProps = ({ detail }, { params, router }) => ({
     ...detail,
     id: params.id,
-    replace: router.replace,
+    replaceUrl: router.replace,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

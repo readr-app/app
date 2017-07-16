@@ -50,7 +50,7 @@ class Detail extends Component {
     }
 
     setActive({ color, id, url, title, created_at }) {
-        this.props.replace(`/article/${id}`);
+        this.props.replaceUrl(`/article/${id}`);
         this.props.setArticleColor(color);
         trackEvent('View article', { url, title, created_at });
     }
@@ -92,7 +92,7 @@ Detail.propTypes = {
     color: PropTypes.string,
     appending: PropTypes.bool.isRequired,
     id: PropTypes.string.isRequired,
-    replace: PropTypes.func.isRequired,
+    replaceUrl: PropTypes.func.isRequired,
     getInitialDetail: PropTypes.func.isRequired,
     appendArticle: PropTypes.func.isRequired,
     setArticleColor: PropTypes.func.isRequired,
