@@ -2,57 +2,31 @@
 /* eslint "camelcase": 0 */
 
 import React, { Component, PropTypes } from 'react';
-import uniq from 'ramda/src/uniq';
 import equals from 'ramda/src/equals';
+import connectDetail from '../../store/containers/detail';
 import mountNode from '../../';
 import { trackEvent } from '../../modules/tracking/';
-import { get, getKeys } from '../../modules/storage/';
 import scrollOffset from '../../modules/util/scroll-offset';
 import ThemeColor from '../../components/theme-color/theme-color';
 import FallbackText from '../../components/fallback-text/fallback-text';
-import Article from '../../components/article/article';
+import Article, { articleShape } from '../../components/article/article';
 import styles from './detail.sass';
-
-const removeCurrentArticleIdFromKeys = (keys, articleId) => {
-    const index = keys.indexOf(articleId);
-    return [
-        ...keys.slice(0, index),
-        ...keys.slice(index + 1),
-    ];
-};
 
 class Detail extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            articles: [],
-            keys: [],
-            color: null,
-        };
+        this.props.getInitialDetail(this.props.id);
         this.onScroll = this.onScroll.bind(this);
         this.setActive = this.setActive.bind(this);
-    }
-
-    componentWillMount() {
-        const { id } = this.props.params;
-        Promise.all([
-            get(id),
-            getKeys(),
-        ]).then(([article, allKeys]) => {
-            const { color } = article;
-            const articles = [{ ...article, ...{ id } }];
-            const keys = removeCurrentArticleIdFromKeys(uniq(allKeys), id);
-            this.setState({ articles, color, keys });
-        });
     }
 
     componentDidMount() {
         window.addEventListener('scroll', this.onScroll);
     }
 
-    shouldComponentUpdate(_, nextState) {
-        return !equals(this.state, nextState);
+    shouldComponentUpdate(nextProps) {
+        return !equals(this.props, nextProps);
     }
 
     componentWillUnmount() {
@@ -61,55 +35,40 @@ class Detail extends Component {
 
     onScroll() {
         return requestAnimationFrame(() => {
-            if (this.appendingNext) {
+            if (this.props.appending) {
                 return;
             }
-            this.appendingNext = true;
+            this.props.setIsAppendingArticle(true);
             const { height } = mountNode.getBoundingClientRect();
             const position = window.innerHeight + scrollOffset.y + 20;
             if (position > height) {
-                this.loadNext();
+                this.props.appendArticle();
             } else {
-                this.appendingNext = false;
+                this.props.setIsAppendingArticle(false);
             }
         });
     }
 
     setActive({ color, id, url, title, created_at }) {
-        this.props.router.replace(`/article/${id}`);
-        this.setState({ color });
+        this.props.replaceUrl(`/article/${id}`);
+        this.props.setArticleColor(color);
         trackEvent('View article', { url, title, created_at });
-    }
-
-    loadNext() {
-        const [nextId, ...keys] = this.state.keys;
-        get(nextId).then((article) => {
-            const articles = [...this.state.articles, {
-                ...article,
-                ...{ id: nextId },
-            }];
-            this.setState({ articles, keys }, () => {
-                if (keys.length) {
-                    this.appendingNext = false;
-                }
-            });
-        });
     }
 
     render() {
         /* eslint "react/no-danger": 0 */
-        if (!this.state.articles.length) {
+        if (!this.props.articles.length) {
             return (<FallbackText
                 className={styles.loading}
                 text="Loading &hellip;"
             />);
         }
 
-        const { color } = this.state;
+        const { color } = this.props;
 
         return (<ThemeColor color={color}>
             <div className={styles.outer}>
-                {this.state.articles.map((article, i) => (
+                {this.props.articles.map((article, i) => (
                     <Article
                         name={`article-${i}`}
                         key={i}
@@ -129,12 +88,15 @@ class Detail extends Component {
 }
 
 Detail.propTypes = {
-    params: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-    }).isRequired,
-    router: PropTypes.shape({
-        replace: PropTypes.func.isRequired,
-    }).isRequired,
+    articles: PropTypes.arrayOf(PropTypes.shape(articleShape)).isRequired,
+    color: PropTypes.string,
+    appending: PropTypes.bool.isRequired,
+    id: PropTypes.string.isRequired,
+    replaceUrl: PropTypes.func.isRequired,
+    getInitialDetail: PropTypes.func.isRequired,
+    appendArticle: PropTypes.func.isRequired,
+    setArticleColor: PropTypes.func.isRequired,
+    setIsAppendingArticle: PropTypes.func.isRequired,
 };
 
-export default Detail;
+export default connectDetail(Detail);

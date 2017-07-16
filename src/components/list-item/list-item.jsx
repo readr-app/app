@@ -32,7 +32,7 @@ const ListItem = (props) => {
             type="button"
             title="Delete item"
             className={styles.delete}
-            onClick={deleteArticle(id)}
+            onClick={() => deleteArticle(id)}
         >&times;</button>
     </li>);
 };

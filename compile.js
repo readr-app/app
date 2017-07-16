@@ -1,5 +1,5 @@
 
-/* eslint "no-console": 0 */
+/* eslint "no-console": 0, "import/no-unresolved": 0 */
 
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
