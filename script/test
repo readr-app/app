@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -ev
+
+yarn test
+yarn run serve &
+
+PID=$!
+
+yarn run e2e
+
+kill $PID
