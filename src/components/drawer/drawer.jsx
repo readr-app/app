@@ -16,7 +16,7 @@ const Drawer = ({ children, isVisible, toggleDrawer }) => {
     });
     const hidden = (!isVisible).toString();
 
-    return (<div>
+    return (<div id="drawer">
         <div className={drawerClass} aria-hidden={hidden}>
             <button
                 aria-expanded={isVisible.toString()}

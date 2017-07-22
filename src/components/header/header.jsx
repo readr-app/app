@@ -64,6 +64,7 @@ class Header extends PureComponent {
             <header
                 className={headerClassName}
                 style={{ backgroundColor: color }}
+                id="main-header"
             >
                 <div className={styles.inner}>
                     <HeaderButton

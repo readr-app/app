@@ -5,6 +5,4 @@ set -ev
 yarn run lint
 yarn run build
 
-find tests -name '*.js' -exec \
-    $(npm bin)/testcafe chrome \
-    -a 'yarn run serve' {} \; || { exit 1; }
+$(npm bin)/testcafe chrome -a 'yarn run serve' tests/e2e.js || { exit 1; }
