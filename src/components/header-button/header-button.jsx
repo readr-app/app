@@ -15,6 +15,7 @@ const MenuButton = ({ color, toggleDrawer, drawerOpen }) => (
         className={innerClass}
         onClick={toggleDrawer}
         onMouseUp={blur}
+        id="hamburger"
     >
         <span className={styles.text}>Toggle Navigation</span>
     </button>

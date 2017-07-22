@@ -64,7 +64,10 @@ class Index extends PureComponent {
                         articles={this.props.articles}
                         deleteArticle={articleId => this.props.deleteArticle(articleId)}
                     />) :
-                    (<FallbackText text="Not articles saved yet." />)}
+                    (<FallbackText
+                        id="index-fallback-text"
+                        text="No articles saved yet."
+                    />)}
             </main>
         </ThemeColor>);
     }

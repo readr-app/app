@@ -3,6 +3,8 @@ import React, { PureComponent, PropTypes } from 'react';
 import classnames from 'classnames';
 import mdlTextfield from 'material-design-lite/src/textfield/_textfield.scss';
 
+const ID_INPUT = 'form-input';
+
 const ENTER_KEY_CODE = 13;
 
 const DEFAULT_STATE = {
@@ -70,6 +72,7 @@ class Form extends PureComponent {
                 onBlur={this.blur}
                 onChange={this.setDirty}
                 onKeyUp={this.addArticle}
+                id={ID_INPUT}
             />
             <label className={stylesLabel} htmlFor="sample3">
                 Insert URL &amp; hit Enter
