@@ -1,4 +1,3 @@
-
 import React, { PropTypes } from 'react';
 import classnames from 'classnames';
 import mdlLayout from 'material-design-lite/src/layout/_layout.scss';
@@ -8,7 +7,7 @@ import styles from './main.sass';
 
 const layoutClassname = classnames(mdlLayout['mdl-layout'], styles.main);
 
-const Main = ({ pathname, id, children }) => (
+const Main = ({ pathname, id, children }) =>
     <div className={layoutClassname}>
         <Header
             isIndex={pathname === '/'}
@@ -16,8 +15,7 @@ const Main = ({ pathname, id, children }) => (
             articleId={id}
         />
         {children}
-    </div>
-);
+    </div>;
 
 Main.propTypes = {
     pathname: PropTypes.string.isRequired,

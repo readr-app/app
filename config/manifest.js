@@ -1,4 +1,3 @@
-
 const icon = size => ({
     src: `/readr_android-chrome-${size}x${size}.png`,
     sizes: `${size}x${size}`,
@@ -23,11 +22,13 @@ exports.background_color = '#fff';
 
 exports.theme_color = '#3f51b5';
 
-exports.description = 'Save articles now, read them later when you\'re offline.';
+exports.description = "Save articles now, read them later when you're offline.";
 
-exports.related_applications = [{
-    platform: 'web',
-}];
+exports.related_applications = [
+    {
+        platform: 'web',
+    },
+];
 
 exports.icons = [
     icon(36),

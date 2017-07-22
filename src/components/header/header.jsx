@@ -1,4 +1,3 @@
-
 import React, { PureComponent, PropTypes } from 'react';
 import classnames from 'classnames';
 import tinycolor from 'tinycolor2';
@@ -19,7 +18,6 @@ const getTextColor = (bgColor = DEFAULT_COLOR) => {
 };
 
 class Header extends PureComponent {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -39,8 +37,7 @@ class Header extends PureComponent {
 
     setHeaderColor(articleId) {
         if (articleId) {
-            return get(articleId).then(({ color }) =>
-                this.setState({ color }));
+            return get(articleId).then(({ color }) => this.setState({ color }));
         }
         return this.setState({ color: DEFAULT_COLOR });
     }
@@ -48,8 +45,7 @@ class Header extends PureComponent {
     toggleDrawer(val) {
         const { drawerOpen } = this.state;
         this.setState({
-            drawerOpen: typeof val === 'boolean' ?
-                val : !drawerOpen,
+            drawerOpen: typeof val === 'boolean' ? val : !drawerOpen,
         });
     }
 
@@ -60,26 +56,28 @@ class Header extends PureComponent {
         const headerClassName = classnames(styles.header, {
             [styles.fixed]: isArticle,
         });
-        return (<div>
-            <header
-                className={headerClassName}
-                style={{ backgroundColor: color }}
-                id="main-header"
-            >
-                <div className={styles.inner}>
-                    <HeaderButton
-                        isIndex={isIndex}
-                        color={textColor}
-                        toggleDrawer={this.toggleDrawer}
-                        drawerOpen={drawerOpen}
-                    />
-                    <Logo color={textColor} />
-                </div>
-            </header>
-            <Drawer isVisible={drawerOpen} toggleDrawer={this.toggleDrawer}>
-                <Navigation toggleDrawer={this.toggleDrawer} />
-            </Drawer>
-        </div>);
+        return (
+            <div>
+                <header
+                    className={headerClassName}
+                    style={{ backgroundColor: color }}
+                    id="main-header"
+                >
+                    <div className={styles.inner}>
+                        <HeaderButton
+                            isIndex={isIndex}
+                            color={textColor}
+                            toggleDrawer={this.toggleDrawer}
+                            drawerOpen={drawerOpen}
+                        />
+                        <Logo color={textColor} />
+                    </div>
+                </header>
+                <Drawer isVisible={drawerOpen} toggleDrawer={this.toggleDrawer}>
+                    <Navigation toggleDrawer={this.toggleDrawer} />
+                </Drawer>
+            </div>
+        );
     }
 }
 

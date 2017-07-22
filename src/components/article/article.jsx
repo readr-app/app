@@ -1,4 +1,3 @@
-
 /* eslint
     "react/no-danger": 0,
     "jsx-a11y/anchor-has-content": 0
@@ -16,60 +15,44 @@ import styles from './article.sass';
 
 const btnClass = classnames(styles.button, mdlBtn['mdl-button']);
 
-const copyToClipBoardBtn = (url) => {
+const copyToClipBoardBtn = url => {
     if (hasClipboardSupport()) {
-        return (<CopyButton
-            className={btnClass}
-            caption="Copy article-URL"
-            data={url}
-        />);
+        return <CopyButton className={btnClass} caption="Copy article-URL" data={url} />;
     }
     return null;
 };
 
-const ref = ctx => (el) => {
+const ref = ctx => el => {
     // eslint-disable-next-line no-param-reassign
     ctx.props.parentBindings.domNode = el;
 };
 
 class Article extends PureComponent {
     render() {
-        const {
-            name,
-            id,
-            url,
-            color,
-            title,
-            intro,
-            content,
-            created_at,
-            onSetActive,
-        } = this.props;
+        const { name, id, url, color, title, intro, content, created_at, onSetActive } = this.props;
 
         return (
             <article className={styles.article} ref={ref(this)}>
                 <Link
                     aria-hidden="true"
                     to={name}
-                    onSetActive={() =>
-                        onSetActive({ color, id, url, title, created_at })}
+                    onSetActive={() => onSetActive({ color, id, url, title, created_at })}
                     spy
                 />
-                <h1>{title}</h1>
+                <h1>
+                    {title}
+                </h1>
                 <div className={styles.time}>
                     Saved <TimeAgo timestamp={created_at} /> ago
                 </div>
                 <p>
-                    <em>{intro}</em>
+                    <em>
+                        {intro}
+                    </em>
                 </p>
                 <div dangerouslySetInnerHTML={{ __html: content }} />
                 <footer className={styles.bottom}>
-                    <a
-                        href={url}
-                        className={btnClass}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
+                    <a href={url} className={btnClass} target="_blank" rel="noopener noreferrer">
                         View original article
                     </a>
                     {copyToClipBoardBtn(url)}

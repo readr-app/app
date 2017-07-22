@@ -1,4 +1,3 @@
-
 import React, { PureComponent, PropTypes } from 'react';
 import classnames from 'classnames';
 import mdlTextfield from 'material-design-lite/src/textfield/_textfield.scss';
@@ -13,7 +12,6 @@ const DEFAULT_STATE = {
 };
 
 class Form extends PureComponent {
-
     constructor(props) {
         super(props);
         this.state = Object.assign({}, DEFAULT_STATE);
@@ -56,30 +54,34 @@ class Form extends PureComponent {
     }
 
     render() {
-        const stylesForm = classnames(mdlTextfield['mdl-textfield'],
+        const stylesForm = classnames(
+            mdlTextfield['mdl-textfield'],
             mdlTextfield['mdl-textfield--full-width'],
-            mdlTextfield['mdl-textfield--floating-label'], {
+            mdlTextfield['mdl-textfield--floating-label'],
+            {
                 [mdlTextfield['is-focused']]: this.state.focus,
                 [mdlTextfield['is-dirty']]: this.state.dirty,
-            });
+            }
+        );
         const stylesInput = mdlTextfield['mdl-textfield__input'];
         const stylesLabel = mdlTextfield['mdl-textfield__label'];
-        return (<div className={stylesForm}>
-            <input
-                className={stylesInput}
-                type="url"
-                onFocus={this.focus}
-                onBlur={this.blur}
-                onChange={this.setDirty}
-                onKeyUp={this.addArticle}
-                id={ID_INPUT}
-            />
-            <label className={stylesLabel} htmlFor="sample3">
-                Insert URL &amp; hit Enter
-            </label>
-        </div>);
+        return (
+            <div className={stylesForm}>
+                <input
+                    className={stylesInput}
+                    type="url"
+                    onFocus={this.focus}
+                    onBlur={this.blur}
+                    onChange={this.setDirty}
+                    onKeyUp={this.addArticle}
+                    id={ID_INPUT}
+                />
+                <label className={stylesLabel} htmlFor="sample3">
+                    Insert URL &amp; hit Enter
+                </label>
+            </div>
+        );
     }
-
 }
 
 Form.propTypes = {

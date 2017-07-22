@@ -1,4 +1,3 @@
-
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -103,64 +102,63 @@ const plugins = [
         ],
     }),
 ];
-const prodPlugins = !isProd ? [] : [
-    new webpack.LoaderOptionsPlugin({
-        minimize: true,
-        debug: false,
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-        compress: {
-            warnings: false,
-            screw_ie8: true,
-            conditionals: true,
-            unused: true,
-            comparisons: true,
-            sequences: true,
-            dead_code: true,
-            evaluate: true,
-            if_return: true,
-            join_vars: true,
-        },
-        output: {
-            comments: false,
-        },
-    }),
-    new FaviconsWebpackPlugin({
-        logo: path.join(__dirname, 'assets', 'readr-app-icon.png'),
-        prefix: 'readr_',
-        title: manifest.name,
-        emitStats: false,
-        persistentCache: false,
-        background: manifest.theme_color,
-        icons: {
-            android: true,
-            appleIcon: false,
-            appleStartup: true,
-            coast: false,
-            favicons: true,
-            firefox: false,
-            opengraph: true,
-            twitter: false,
-            yandex: false,
-            windows: false,
-        },
-    }),
-    new HtmlWebpackPlugin({
-        template: path.join(SRC_PATH, 'manifestloader.ejs'),
-        filename: MANIFEST_LOADER,
-        minify: {
-            collapseWhitespace: isProd,
-        },
-        inject: false,
-        appCacheFile: LEGACY_MANIFEST_FILE,
-    }),
-];
+const prodPlugins = !isProd
+    ? []
+    : [
+          new webpack.LoaderOptionsPlugin({
+              minimize: true,
+              debug: false,
+          }),
+          new webpack.optimize.UglifyJsPlugin({
+              compress: {
+                  warnings: false,
+                  screw_ie8: true,
+                  conditionals: true,
+                  unused: true,
+                  comparisons: true,
+                  sequences: true,
+                  dead_code: true,
+                  evaluate: true,
+                  if_return: true,
+                  join_vars: true,
+              },
+              output: {
+                  comments: false,
+              },
+          }),
+          new FaviconsWebpackPlugin({
+              logo: path.join(__dirname, 'assets', 'readr-app-icon.png'),
+              prefix: 'readr_',
+              title: manifest.name,
+              emitStats: false,
+              persistentCache: false,
+              background: manifest.theme_color,
+              icons: {
+                  android: true,
+                  appleIcon: false,
+                  appleStartup: true,
+                  coast: false,
+                  favicons: true,
+                  firefox: false,
+                  opengraph: true,
+                  twitter: false,
+                  yandex: false,
+                  windows: false,
+              },
+          }),
+          new HtmlWebpackPlugin({
+              template: path.join(SRC_PATH, 'manifestloader.ejs'),
+              filename: MANIFEST_LOADER,
+              minify: {
+                  collapseWhitespace: isProd,
+              },
+              inject: false,
+              appCacheFile: LEGACY_MANIFEST_FILE,
+          }),
+      ];
 
 module.exports = (supportedSources, bail) => {
-
-    const supportedSites = supportedSources
-        .map(name => `&nbsp;&bull;&nbsp;${name}`)
-        .join('<br>');
+    const supportedSites = supportedSources.map(name => `&nbsp;&bull;&nbsp;${name}`).join('<br>');
     const postHtmlOptions = new webpack.LoaderOptionsPlugin({
         options: {
             posthtml: {
@@ -174,7 +172,6 @@ module.exports = (supportedSources, bail) => {
     });
 
     return {
-
         target: 'web',
 
         context: SRC_PATH,
@@ -188,39 +185,45 @@ module.exports = (supportedSources, bail) => {
         },
 
         module: {
-            rules: [{
-                test: /\.js$/,
-                use: ['source-map-loader'],
-                exclude: /node_modules/,
-            }, {
-                test: /\.jsx?$/,
-                use: ['babel-loader'],
-                exclude: [/node_modules/, /__tests__/],
-            }, {
-                test: /\.s(a|c)ss$/,
-                use: [
-                    'style-loader',
-                    cssLoader,
-                    'postcss-loader',
-                    'sass-loader',
-                ],
-            }, {
-                test: /\.(png|jpe?g|gif)$/,
-                use: ['file-loader'],
-            }, {
-                test: /\.markup\.svg$/,
-                use: ['html-loader', 'markup-inline-loader'],
-            }, {
-                test: /\.file\.svg$/,
-                use: ['url-loader'],
-            }, {
-                test: /\.md$/,
-                use: [
-                    { loader: 'html-loader', options: { minimize: isProd } },
-                    'posthtml-loader',
-                    'markdown-loader',
-                ],
-            }],
+            rules: [
+                {
+                    test: /\.js$/,
+                    use: ['source-map-loader'],
+                    exclude: /node_modules/,
+                },
+                {
+                    test: /\.jsx?$/,
+                    use: ['babel-loader'],
+                    exclude: [/node_modules/, /__tests__/],
+                },
+                {
+                    test: /\.s(a|c)ss$/,
+                    use: ['style-loader', cssLoader, 'postcss-loader', 'sass-loader'],
+                },
+                {
+                    test: /\.(png|jpe?g|gif)$/,
+                    use: ['file-loader'],
+                },
+                {
+                    test: /\.markup\.svg$/,
+                    use: ['html-loader', 'markup-inline-loader'],
+                },
+                {
+                    test: /\.file\.svg$/,
+                    use: ['url-loader'],
+                },
+                {
+                    test: /\.md$/,
+                    use: [
+                        {
+                            loader: 'html-loader',
+                            options: { minimize: isProd },
+                        },
+                        'posthtml-loader',
+                        'markdown-loader',
+                    ],
+                },
+            ],
         },
 
         resolve: {
@@ -241,7 +244,5 @@ module.exports = (supportedSources, bail) => {
         plugins: plugins.concat([postHtmlOptions]).concat(prodPlugins),
 
         bail,
-
     };
-
 };

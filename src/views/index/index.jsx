@@ -1,4 +1,3 @@
-
 /* eslint "camelcase": 0 */
 
 import React, { PureComponent, PropTypes } from 'react';
@@ -14,7 +13,6 @@ import { articleShape } from '../../components/article/article';
 import styles from './index.sass';
 
 class Index extends PureComponent {
-
     constructor(props) {
         super(props);
         this.startDownload = this.startDownload.bind(this);
@@ -25,11 +23,7 @@ class Index extends PureComponent {
     }
 
     getProgressProperty() {
-        const {
-            isLoading,
-            success,
-            error,
-        } = this.props;
+        const { isLoading, success, error } = this.props;
 
         if (isLoading) {
             return { isLoading };
@@ -54,33 +48,28 @@ class Index extends PureComponent {
     render() {
         const progressProperty = this.getProgressProperty();
 
-        return (<ThemeColor color={theme_color}>
-            <main className={styles.content}>
-                {progressProperty ?
-                    (<Progress {...progressProperty} />) :
-                    (<Form startDownload={this.startDownload} />)}
-                {this.props.articles.length ?
-                    (<List
-                        articles={this.props.articles}
-                        deleteArticle={articleId => this.props.deleteArticle(articleId)}
-                    />) :
-                    (<FallbackText
-                        id="index-fallback-text"
-                        text="No articles saved yet."
-                    />)}
-            </main>
-        </ThemeColor>);
+        return (
+            <ThemeColor color={theme_color}>
+                <main className={styles.content}>
+                    {progressProperty
+                        ? <Progress {...progressProperty} />
+                        : <Form startDownload={this.startDownload} />}
+                    {this.props.articles.length
+                        ? <List
+                              articles={this.props.articles}
+                              deleteArticle={articleId => this.props.deleteArticle(articleId)}
+                          />
+                        : <FallbackText id="index-fallback-text" text="No articles saved yet." />}
+                </main>
+            </ThemeColor>
+        );
     }
-
 }
 
 Index.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     success: PropTypes.bool.isRequired,
-    error: PropTypes.oneOfType([
-        PropTypes.bool,
-        PropTypes.string,
-    ]).isRequired,
+    error: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]).isRequired,
     articles: PropTypes.arrayOf(PropTypes.shape(articleShape)).isRequired,
     fetchArticles: PropTypes.func.isRequired,
     downloadArticle: PropTypes.func.isRequired,

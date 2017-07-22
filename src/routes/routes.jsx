@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
@@ -14,19 +13,15 @@ import './routes.sass';
 const store = getStore();
 const history = syncHistoryWithStore(browserHistory, store);
 
-const Routes = () => (
+const Routes = () =>
     <Provider store={store}>
-        <Router
-            history={history}
-            onUpdate={onRouteChange}
-        >
+        <Router history={history} onUpdate={onRouteChange}>
             <Route path="/" component={Main}>
                 <IndexRoute component={Index} />
                 <Route path="about" component={About} />
                 <Route path="article/:id" component={Detail} />
             </Route>
         </Router>
-    </Provider>
-);
+    </Provider>;
 
 export default Routes;

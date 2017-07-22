@@ -1,4 +1,3 @@
-
 /* eslint "camelcase": 0 */
 
 import React, { PropTypes } from 'react';
@@ -16,25 +15,28 @@ const makeStyles = ({ x }) => ({
     opacity: x,
 });
 
-const ListItem = (props) => {
+const ListItem = props => {
     const { id, url, title, created_at, deleteArticle, style } = props;
     const domain = parse(url).hostname;
-    return (<li className={stylesItem} style={makeStyles(style)}>
-        <Link
-            className={styles.link}
-            to={`/article/${id}`}
-        >{title}</Link>
-        <div className={styles.meta}>
-            Saved <TimeAgo timestamp={created_at} /> ago &middot;&nbsp;
-            <em>{domain}</em>
-        </div>
-        <button
-            type="button"
-            title="Delete item"
-            className={styles.delete}
-            onClick={() => deleteArticle(id)}
-        >&times;</button>
-    </li>);
+    return (
+        <li className={stylesItem} style={makeStyles(style)}>
+            <Link className={styles.link} to={`/article/${id}`}>
+                {title}
+            </Link>
+            <div className={styles.meta}>
+                Saved <TimeAgo timestamp={created_at} /> ago &middot;&nbsp;
+                <em>{domain}</em>
+            </div>
+            <button
+                type="button"
+                title="Delete item"
+                className={styles.delete}
+                onClick={() => deleteArticle(id)}
+            >
+                &times;
+            </button>
+        </li>
+    );
 };
 
 ListItem.propTypes = {

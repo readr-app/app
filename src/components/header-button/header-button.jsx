@@ -1,4 +1,3 @@
-
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import classnames from 'classnames';
@@ -8,7 +7,7 @@ import styles from './header-button.sass';
 
 const innerClass = classnames(mdlLayout['mdl-layout__drawer-button'], styles.inner);
 
-const MenuButton = ({ color, toggleDrawer, drawerOpen }) => (
+const MenuButton = ({ color, toggleDrawer, drawerOpen }) =>
     <button
         aria-expanded={drawerOpen.toString()}
         style={{ color }}
@@ -18,8 +17,7 @@ const MenuButton = ({ color, toggleDrawer, drawerOpen }) => (
         id="hamburger"
     >
         <span className={styles.text}>Toggle Navigation</span>
-    </button>
-);
+    </button>;
 
 MenuButton.propTypes = {
     color: PropTypes.string.isRequired,
@@ -27,15 +25,10 @@ MenuButton.propTypes = {
     drawerOpen: PropTypes.bool.isRequired,
 };
 
-const BackButton = ({ color }) => (
-    <Link
-        to="/"
-        style={{ color }}
-        className={innerClass}
-    >
+const BackButton = ({ color }) =>
+    <Link to="/" style={{ color }} className={innerClass}>
         <span className={styles.text}>back</span>
-    </Link>
-);
+    </Link>;
 
 BackButton.propTypes = {
     color: PropTypes.string.isRequired,
@@ -47,7 +40,7 @@ const ButtonIcon = ({ isIndex, drawerOpen }) => {
         [styles.backIcon]: !isIndex,
         [styles.hidden]: drawerOpen,
     });
-    return (<i className={iconClass} />);
+    return <i className={iconClass} />;
 };
 
 ButtonIcon.propTypes = {
@@ -55,14 +48,13 @@ ButtonIcon.propTypes = {
     drawerOpen: PropTypes.bool.isRequired,
 };
 
-const HeaderButton = ({ isIndex, color, toggleDrawer, drawerOpen }) => (
+const HeaderButton = ({ isIndex, color, toggleDrawer, drawerOpen }) =>
     <span className={styles.button}>
-        {isIndex ?
-            (<MenuButton color={color} toggleDrawer={toggleDrawer} drawerOpen={drawerOpen} />) :
-            (<BackButton color={color} />)}
+        {isIndex
+            ? <MenuButton color={color} toggleDrawer={toggleDrawer} drawerOpen={drawerOpen} />
+            : <BackButton color={color} />}
         <ButtonIcon isIndex={isIndex} drawerOpen={drawerOpen} />
-    </span>
-);
+    </span>;
 
 HeaderButton.propTypes = {
     isIndex: PropTypes.bool.isRequired,

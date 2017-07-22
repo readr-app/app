@@ -1,4 +1,3 @@
-
 /* eslint "jsx-a11y/no-static-element-interactions": 0 */
 
 import React, { PropTypes } from 'react';
@@ -16,23 +15,27 @@ const Drawer = ({ children, isVisible, toggleDrawer }) => {
     });
     const hidden = (!isVisible).toString();
 
-    return (<div id="drawer">
-        <div className={drawerClass} aria-hidden={hidden}>
-            <button
-                aria-expanded={isVisible.toString()}
-                title="Close navigation"
-                className={styles.close}
+    return (
+        <div id="drawer">
+            <div className={drawerClass} aria-hidden={hidden}>
+                <button
+                    aria-expanded={isVisible.toString()}
+                    title="Close navigation"
+                    className={styles.close}
+                    onClick={() => toggleDrawer(false)}
+                    onMouseUp={blur}
+                >
+                    &times;
+                </button>
+                {children}
+            </div>
+            <div
+                aria-hidden={hidden}
+                className={obfuscatorClass}
                 onClick={() => toggleDrawer(false)}
-                onMouseUp={blur}
-            >&times;</button>
-            {children}
+            />
         </div>
-        <div
-            aria-hidden={hidden}
-            className={obfuscatorClass}
-            onClick={() => toggleDrawer(false)}
-        />
-    </div>);
+    );
 };
 
 Drawer.propTypes = {
