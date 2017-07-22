@@ -1,4 +1,3 @@
-
 import runtime from 'serviceworker-webpack-plugin/lib/runtime';
 import initAppCache from './appcache';
 import { trackEvent } from '../tracking/';

@@ -1,4 +1,3 @@
-
 import { createInstance } from 'localforage';
 
 const NAME = 'readr-store';
@@ -10,8 +9,7 @@ const instance = createInstance({
     version: VERSION,
 });
 
-export const set = (key, payload) =>
-    instance.setItem(key, payload);
+export const set = (key, payload) => instance.setItem(key, payload);
 
 // Add ID for the sake of backwards compatibility
 export const get = key =>
@@ -20,16 +18,19 @@ export const get = key =>
         ...{ id: key },
     }));
 
-export const getKeys = () =>
-    instance.keys();
+export const getKeys = () => instance.keys();
 
 export const getAll = () =>
     instance.keys().then(keys =>
-        Promise.all(keys.map(key =>
-            instance.getItem(key)
-                .then(article => Object.assign({}, article, {
-                    id: key,
-                })))));
+        Promise.all(
+            keys.map(key =>
+                instance.getItem(key).then(article =>
+                    Object.assign({}, article, {
+                        id: key,
+                    })
+                )
+            )
+        )
+    );
 
-export const remove = key =>
-    instance.removeItem(key);
+export const remove = key => instance.removeItem(key);

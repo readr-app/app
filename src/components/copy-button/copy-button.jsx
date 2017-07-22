@@ -1,4 +1,3 @@
-
 import React, { PureComponent, PropTypes } from 'react';
 import Clipboard, { isSupported } from 'clipboard';
 import classnames from 'classnames';
@@ -31,7 +30,7 @@ class CopyButton extends PureComponent {
             return { left: null, top: null };
         }
         const btnRect = this.btn.getBoundingClientRect();
-        const left = (btnRect.left + (btnRect.width / 2)) - (this.tooltip.offsetWidth / 2);
+        const left = btnRect.left + btnRect.width / 2 - this.tooltip.offsetWidth / 2;
         const top = btnRect.top - this.tooltip.offsetHeight - 10;
         return {
             left: `${left}px`,
@@ -51,8 +50,7 @@ class CopyButton extends PureComponent {
         const elem = document.createElement('span');
         elem.textContent = 'Copied!';
         elem.className = classnames(styles.tooltip, mdlTooltip['mdl-tooltip']);
-        requestAnimationFrame(() =>
-            this.btn.parentNode.insertBefore(elem, this.btn));
+        requestAnimationFrame(() => this.btn.parentNode.insertBefore(elem, this.btn));
         return elem;
     }
 
@@ -73,7 +71,9 @@ class CopyButton extends PureComponent {
                 data-clipboard-text={data}
                 ref={btn => (this.btn = btn)}
                 type="button"
-            >{caption}</button>
+            >
+                {caption}
+            </button>
         );
     }
 }

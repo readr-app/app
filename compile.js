@@ -1,4 +1,3 @@
-
 /* eslint "no-console": 0, "import/no-unresolved": 0 */
 
 const webpack = require('webpack');
@@ -12,7 +11,7 @@ const supportedSources = (() => {
         // eslint-disable-next-line global-require
         return require('../server/functions/supported-sources/');
     } catch (err) {
-        return () => ([]);
+        return () => [];
     }
 })();
 const fetchContents = (() => {
@@ -28,17 +27,18 @@ const URL = 'https://us-central1-readr-60929.cloudfunctions.net/supportedSources
 
 const dev = process.env.NODE_ENV !== 'production';
 
-const getList = () => new Promise((resolve, reject) => {
-    if (dev) {
-        return resolve(supportedSources());
-    }
-    return request(URL, (err, { statusCode }, sources) => {
-        if (err || statusCode !== 200) {
-            return reject(err || 'That didn\'t work out so well ...');
+const getList = () =>
+    new Promise((resolve, reject) => {
+        if (dev) {
+            return resolve(supportedSources());
         }
-        return resolve(JSON.parse(sources));
+        return request(URL, (err, { statusCode }, sources) => {
+            if (err || statusCode !== 200) {
+                return reject(err || "That didn't work out so well ...");
+            }
+            return resolve(JSON.parse(sources));
+        });
     });
-});
 
 const handleErrors = (err, stats) => {
     if (err) {
@@ -62,7 +62,7 @@ const handleErrors = (err, stats) => {
     }
 };
 
-const setup = (app) => {
+const setup = app => {
     app.use(bodyParser.urlencoded({ extended: true }));
     app.post('/api/fetchContents', (req, res) =>
         fetchContents(req.body.url, (err, result) => {
@@ -70,10 +70,11 @@ const setup = (app) => {
                 return res.status(403).send(err);
             }
             return res.json(result);
-        }));
+        })
+    );
 };
 
-getList().then((list) => {
+getList().then(list => {
     const watch = process.argv.includes('--watch');
     const config = getConfig(list, !watch);
     const { port } = config.devServer;
@@ -85,9 +86,12 @@ getList().then((list) => {
     });
 
     if (watch) {
-        return new WebpackDevServer(webpack(config), Object.assign({ setup }, devServerConfig))
-            .listen(port, 'localhost', () =>
-                console.log(`Starting server on http://localhost:${port}`));
+        return new WebpackDevServer(
+            webpack(config),
+            Object.assign({ setup }, devServerConfig)
+        ).listen(port, 'localhost', () =>
+            console.log(`Starting server on http://localhost:${port}`)
+        );
     }
     return webpack(config).run(handleErrors);
 }, console.error);

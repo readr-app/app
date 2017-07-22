@@ -1,4 +1,3 @@
-
-export default function ({ target }) {
+export default function({ target }) {
     target.blur();
 }

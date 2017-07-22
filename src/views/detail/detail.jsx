@@ -1,4 +1,3 @@
-
 /* eslint "camelcase": 0 */
 
 import React, { Component, PropTypes } from 'react';
@@ -13,7 +12,6 @@ import Article, { articleShape } from '../../components/article/article';
 import styles from './detail.sass';
 
 class Detail extends Component {
-
     constructor(props) {
         super(props);
         this.props.getInitialDetail(this.props.id);
@@ -58,33 +56,32 @@ class Detail extends Component {
     render() {
         /* eslint "react/no-danger": 0 */
         if (!this.props.articles.length) {
-            return (<FallbackText
-                className={styles.loading}
-                text="Loading &hellip;"
-            />);
+            return <FallbackText className={styles.loading} text="Loading &hellip;" />;
         }
 
         const { color } = this.props;
 
-        return (<ThemeColor color={color}>
-            <div className={styles.outer}>
-                {this.props.articles.map((article, i) => (
-                    <Article
-                        name={`article-${i}`}
-                        key={i}
-                        id={article.id}
-                        url={article.url}
-                        color={article.color}
-                        title={article.title}
-                        created_at={article.created_at}
-                        intro={article.intro}
-                        content={article.content}
-                        onSetActive={this.setActive}
-                    />))}
-            </div>
-        </ThemeColor>);
+        return (
+            <ThemeColor color={color}>
+                <div className={styles.outer}>
+                    {this.props.articles.map((article, i) =>
+                        <Article
+                            name={`article-${i}`}
+                            key={i}
+                            id={article.id}
+                            url={article.url}
+                            color={article.color}
+                            title={article.title}
+                            created_at={article.created_at}
+                            intro={article.intro}
+                            content={article.content}
+                            onSetActive={this.setActive}
+                        />
+                    )}
+                </div>
+            </ThemeColor>
+        );
     }
-
 }
 
 Detail.propTypes = {

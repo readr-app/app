@@ -1,4 +1,3 @@
-
 import { connect } from 'react-redux';
 
 const mapStateToProps = (_, { location, params }) => ({
