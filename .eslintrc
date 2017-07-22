@@ -1,5 +1,5 @@
 {
-    "extends": "prettier",
+    "extends": ["airbnb", "prettier", "prettier/react"],
     "env": {
         "es6": true,
         "node": true,
@@ -14,11 +14,36 @@
         "test": false
     },
     "rules": {
-        "comma-dangle": 2,
+        "comma-dangle": [
+            2,
+            {
+                "arrays": "always-multiline",
+                "objects": "always-multiline",
+                "imports": "always-multiline",
+                "exports": "always-multiline",
+                "functions": "never"
+            }
+        ],
         "block-scoped-var": 0,
         "padded-blocks": 0,
-        "prettier/prettier": "error"
+        "prettier/prettier": [
+            "error",
+            {
+                "printWidth": 100,
+                "tabWidth": 4,
+                "singleQuote": true,
+                "trailingComma": "es5",
+                "jsxBracketSameLine": false
+            }
+        ]
     },
-    "parserOptions": {},
+    "parserOptions": {
+        "ecmaVersion": 2017,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "jsx": true
+        }
+    },
     "plugins": ["react", "prettier"]
 }
