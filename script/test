@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-set -ev
-
-yarn run lint
-yarn run build
-
-$(npm bin)/testcafe chrome -a 'yarn run serve' tests/e2e.js || { exit 1; }
