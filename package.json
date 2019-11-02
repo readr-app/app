@@ -3,13 +3,13 @@
     "version": "0.1.0",
     "description": "Save articles and read them later when offline.",
     "scripts": {
-        "deploy": "firebase deploy --token \"$FIREBASE_TOKEN\"",
-        "serve": "serve -n -l 8888"
+        "deploy": "firebase deploy",
+        "serve": "serve -n -l 8888 site"
     },
     "author": "Emanuel Kluge",
     "license": "Beerware",
     "dependencies": {
-        "firebase-tools": "^3.5.0",
+        "firebase-tools": "^7.6.2",
         "serve": "^11.2.0"
     }
 }

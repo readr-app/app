@@ -1,4 +1,4 @@
-Readr — App
+[Out of Service] Readr — App
 ====
 
 > Save articles and read them later when offline.

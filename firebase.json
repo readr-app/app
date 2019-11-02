@@ -1,13 +1,6 @@
 {
     "hosting": {
-        "public": ".",
-        "ignore": [
-            ".*",
-            "*.json",
-            "node_modules",
-            "README.md",
-            "yarn.lock"
-        ],
+        "public": "./site",
         "trailingSlash": false,
         "rewrites": [
             {
