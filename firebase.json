@@ -1,7 +1,13 @@
 {
     "hosting": {
-        "public": "./dist",
-        "ignore": ["*.json"],
+        "public": ".",
+        "ignore": [
+            ".*",
+            "*.json",
+            "node_modules",
+            "README.md",
+            "yarn.lock"
+        ],
         "trailingSlash": false,
         "rewrites": [
             {
@@ -10,15 +16,6 @@
             }
         ],
         "headers": [
-            {
-                "source": "*.@(js|png|ico|webmanifest)",
-                "headers": [
-                    {
-                        "key": "Cache-Control",
-                        "value": "no-cache"
-                    }
-                ]
-            },
             {
                 "source": "index.html",
                 "headers": [
